@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,23 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Premium accent colors
+				premium: {
+					DEFAULT: 'hsl(var(--premium))',
+					foreground: 'hsl(var(--premium-foreground))',
+					muted: 'hsl(var(--premium-muted))',
+					'muted-foreground': 'hsl(var(--premium-muted-foreground))'
+				},
+				ai: {
+					DEFAULT: 'hsl(var(--ai))',
+					foreground: 'hsl(var(--ai-foreground))',
+					muted: 'hsl(var(--ai-muted))',
+					'muted-foreground': 'hsl(var(--ai-muted-foreground))'
+				},
+				user: {
+					DEFAULT: 'hsl(var(--user))',
+					foreground: 'hsl(var(--user-foreground))'
 				}
 			},
 			borderRadius: {
@@ -70,25 +88,49 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'typing': {
+					'0%': { width: '0' },
+					'100%': { width: '100%' }
+				},
+				'blink': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0' }
+				},
+				'fade-in': {
+					'0%': { opacity: '0', transform: 'translateY(8px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'gradient-flow': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' }
+				},
+				'pulse-soft': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'typing': 'typing 1.5s steps(20, end), blink 0.75s step-end infinite',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'gradient-flow': 'gradient-flow 3s ease infinite',
+				'pulse-soft': 'pulse-soft 1.5s infinite'
+			},
+			boxShadow: {
+				'premium': '0 4px 14px 0 rgba(101, 119, 255, 0.15)'
+			},
+			backgroundImage: {
+				'premium-gradient': 'linear-gradient(90deg, hsla(277, 75%, 84%, 1) 0%, hsla(297, 50%, 51%, 1) 100%)',
+				'premium-gradient-hover': 'linear-gradient(90deg, hsla(277, 80%, 82%, 1) 0%, hsla(297, 55%, 49%, 1) 100%)'
 			}
 		}
 	},
