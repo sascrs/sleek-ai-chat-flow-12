@@ -55,30 +55,31 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             <div className="prose prose-sm dark:prose-invert max-w-none">
               <ReactMarkdown
                 components={{
-                  code: ({ node, inline, className, children, ...props }) => {
-                    if (inline) {
+                  code({ node, className, children, ...props }) {
+                    const match = /language-(\w+)/.exec(className || '');
+                    if (!props.className?.includes('inline')) {
                       return (
-                        <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props}>
-                          {children}
-                        </code>
+                        <div className="code-block relative group">
+                          <pre className="text-sm p-0 m-0 bg-transparent overflow-x-auto">
+                            <code className={match ? `language-${match[1]}` : ''} {...props}>
+                              {children}
+                            </code>
+                          </pre>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => navigator.clipboard.writeText(String(children))}
+                          >
+                            <Copy className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
                       );
                     }
                     return (
-                      <div className="code-block relative group">
-                        <pre className="text-sm p-0 m-0 bg-transparent overflow-x-auto">
-                          <code className="language-typescript" {...props}>
-                            {children}
-                          </code>
-                        </pre>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={() => navigator.clipboard.writeText(String(children))}
-                        >
-                          <Copy className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
+                      <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props}>
+                        {children}
+                      </code>
                     );
                   }
                 }}

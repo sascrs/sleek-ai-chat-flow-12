@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Menu, Settings } from 'lucide-react';
+import { Menu, Settings, Sparkles } from 'lucide-react';
 import { UpgradeButton } from './UpgradeButton';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '@/components/ui/button';
