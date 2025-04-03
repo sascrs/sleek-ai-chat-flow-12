@@ -1,6 +1,5 @@
-
 import React, { useState, useRef } from 'react';
-import { Upload, X, FileText, Image, MoreHorizontal } from 'lucide-react';
+import { Upload, X, FileText, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Attachment } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
