@@ -57,7 +57,9 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 components={{
                   code({ node, className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || '');
-                    if (!props.className?.includes('inline')) {
+                    const isInline = !(className?.includes('language-'));
+                    
+                    if (!isInline) {
                       return (
                         <div className="code-block relative group">
                           <pre className="text-sm p-0 m-0 bg-transparent overflow-x-auto">
