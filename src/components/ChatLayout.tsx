@@ -4,7 +4,11 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { ChatWindow } from './ChatWindow';
 
-export function ChatLayout() {
+interface ChatLayoutProps {
+  children?: React.ReactNode;
+}
+
+export function ChatLayout({ children }: ChatLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const toggleSidebar = () => {
@@ -19,7 +23,7 @@ export function ChatLayout() {
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         
         <main className="flex-1 md:ml-64 relative">
-          <ChatWindow />
+          {children || <ChatWindow />}
         </main>
       </div>
     </div>
