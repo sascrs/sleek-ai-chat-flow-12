@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -368,4 +367,29 @@
 /* Background effects */
 .bg-pattern {
   background-size: 30px 30px;
+}
+
+/* Prevent horizontal scrollbar at small screens */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Ensure content fits within viewport at small screens */
+@media (max-width: 320px) {
+  .chat-container {
+    @apply px-1;
+  }
+  
+  .message-bubble {
+    @apply px-2 py-2 mb-3 max-w-[98%];
+  }
+  
+  .suggestion-card {
+    @apply p-2;
+  }
+  
+  .enhanced-input {
+    @apply pr-16;
+  }
 }

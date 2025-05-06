@@ -8,6 +8,7 @@ import { Attachment } from '@/types';
 import { useChat } from '@/hooks/useChat';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function ChatInput() {
   const [message, setMessage] = useState('');
@@ -16,6 +17,7 @@ export function ChatInput() {
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputContainerRef = useRef<HTMLFormElement>(null);
+  const isMobile = useIsMobile();
   
   const { 
     sendMessage, 
@@ -79,7 +81,7 @@ export function ChatInput() {
   };
 
   return (
-    <div className="border-t bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 px-4 py-4 sticky bottom-0 z-10">
+    <div className="border-t bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 px-2 sm:px-4 py-4 sticky bottom-0 z-10">
       <div className="mx-auto max-w-3xl">
         {attachments.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3.5">
@@ -154,7 +156,8 @@ export function ChatInput() {
             </div>
           </div>
           
-          <div className="mt-3 flex justify-center space-x-2">
+          {/* Updated this section to be more responsive at small screens */}
+          <div className="mt-3 flex flex-wrap justify-center gap-2">
             {isProcessing ? (
               <Button 
                 variant="outline" 
@@ -163,7 +166,7 @@ export function ChatInput() {
                 className="text-xs bg-background/60 font-medium h-7 flex items-center gap-1.5 border-border/60 hover-glow"
               >
                 <StopCircle className="h-3.5 w-3.5" />
-                <span>Stop generating</span>
+                <span>Stop</span>
               </Button>
             ) : (
               <>
@@ -174,7 +177,7 @@ export function ChatInput() {
                   className="text-xs bg-background/60 font-medium h-7 flex items-center gap-1.5 border-border/60 hover-glow"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
-                  <span>Regenerate</span>
+                  <span>{isMobile ? "" : "Regenerate"}</span>
                 </Button>
                 
                 <Button 
@@ -184,7 +187,7 @@ export function ChatInput() {
                   className="text-xs bg-background/60 font-medium h-7 flex items-center gap-1.5 border-border/60 hover-glow"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  <span>Clear chat</span>
+                  <span>{isMobile ? "" : "Clear"}</span>
                 </Button>
                 
                 <Button 
@@ -193,7 +196,7 @@ export function ChatInput() {
                   className="text-xs bg-background/60 font-medium h-7 flex items-center gap-1.5 border-border/60 hover:border-premium/50 hover:text-premium-muted transition-colors hover-glow"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>Advanced mode</span>
+                  <span>{isMobile ? "" : "Advanced"}</span>
                 </Button>
               </>
             )}

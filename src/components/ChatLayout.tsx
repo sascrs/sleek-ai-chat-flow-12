@@ -19,7 +19,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
     <div className="h-screen flex flex-col">
       <Header onMenuClick={toggleSidebar} />
       
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         
         <main className="flex-1 w-full md:ml-64 relative">
