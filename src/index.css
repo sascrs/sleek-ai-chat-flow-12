@@ -211,7 +211,20 @@
   
   /* Custom scrollbar */
   .scrollbar-custom {
-    @apply scrollbar-thin;
+    @apply overflow-auto;
+  }
+  
+  /* Define custom scrollbar styles */
+  .scrollbar-custom::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 hover:bg-primary/40 rounded-full transition-colors;
   }
 
   /* 3D Button effect */
