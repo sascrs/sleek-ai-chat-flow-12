@@ -155,31 +155,59 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start rounded-lg"
+                className={`w-full justify-start rounded-lg ${
+                  location.pathname === '/documents' ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-inner' : ''
+                }`}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    onClose();
+                  }
+                }}
               >
                 <FileText className="h-4 w-4 mr-2.5" />
-                <span className="flex-1 text-left">Documents</span>
+                <Link to="/documents" className="flex-1 text-left">Documents</Link>
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start rounded-lg"
+                className={`w-full justify-start rounded-lg ${
+                  location.pathname === '/image-generation' ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-inner' : ''
+                }`}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    onClose();
+                  }
+                }}
               >
                 <Image className="h-4 w-4 mr-2.5" />
-                <span className="flex-1 text-left">Image Generation</span>
+                <Link to="/image-generation" className="flex-1 text-left">Image Generation</Link>
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start rounded-lg"
+                className={`w-full justify-start rounded-lg ${
+                  location.pathname === '/code-assistant' ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-inner' : ''
+                }`}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    onClose();
+                  }
+                }}
               >
                 <Code className="h-4 w-4 mr-2.5" />
-                <span className="flex-1 text-left">Code Assistant</span>
+                <Link to="/code-assistant" className="flex-1 text-left">Code Assistant</Link>
               </Button>
               <Button
                 variant="ghost"
-                className="w-full justify-start rounded-lg"
+                className={`w-full justify-start rounded-lg ${
+                  location.pathname === '/archived-chats' ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-inner' : ''
+                }`}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    onClose();
+                  }
+                }}
               >
                 <Archive className="h-4 w-4 mr-2.5" />
-                <span className="flex-1 text-left">Archived Chats</span>
+                <Link to="/archived-chats" className="flex-1 text-left">Archived Chats</Link>
               </Button>
             </div>
           </div>
