@@ -1,67 +1,64 @@
 
-import React from 'react';
-import { Menu, Settings, Sparkles } from 'lucide-react';
-import { UpgradeButton } from './UpgradeButton';
-import { ThemeToggle } from './ThemeToggle';
+import React, { useState } from 'react';
+import { ChevronLeft, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Logo } from './Logo';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ThemeToggle } from './ThemeToggle';
+import { UpgradeButton } from './UpgradeButton';
+import { useSettings } from '@/context/SettingsContext';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface HeaderProps {
-  toggleSidebar: () => void;
+  onMenuClick: () => void;
 }
 
-export function Header({ toggleSidebar }: HeaderProps) {
+export function Header({ onMenuClick }: HeaderProps) {
+  const { getActiveProvider, aiProviders } = useSettings();
+  const activeProvider = getActiveProvider();
+  
+  // Map of provider IDs to more descriptive model names
+  const modelNameMap: Record<string, string> = {
+    'llama': 'Llama 3 70B',
+    'openai': 'GPT-4 Turbo',
+    'groq': 'Groq LLM',
+    'deepseek': 'DeepSeek Coder'
+  };
+
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-14 items-center justify-between px-4">
         <div className="flex items-center">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="mr-2 md:hidden rounded-full" 
-            onClick={toggleSidebar}
-          >
+          <Button variant="ghost" size="icon" onClick={onMenuClick} className="md:hidden">
             <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle sidebar</span>
+            <span className="sr-only">Toggle Menu</span>
           </Button>
-          <Logo size="md" />
+          <div className="hidden md:flex md:items-center md:gap-2">
+            <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">Back to Projects</span>
+          </div>
         </div>
         
-        <div className="flex items-center gap-3">
-          <UpgradeButton className="hidden md:flex" />
+        <div className="flex items-center gap-2">
+          {activeProvider && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-2 rounded-full border border-border/40 bg-background px-3 py-1 text-xs">
+                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                  <span>
+                    {modelNameMap[activeProvider.id] || activeProvider.name}
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Active AI Model</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
           <ThemeToggle />
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 p-0">
-                <Avatar className="h-9 w-9 ring-2 ring-border">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">SC</AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56" sideOffset={8}>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Settings className="mr-2.5 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Sparkles className="mr-2.5 h-4 w-4" />
-                <span>Upgrade to Pro</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UpgradeButton />
         </div>
       </div>
     </header>
