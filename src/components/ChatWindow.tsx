@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
 import { useChat } from '@/hooks/useChat';
+import { Logo } from './Logo';
 
 export function ChatWindow() {
   const { currentConversation } = useChat();
@@ -18,20 +19,19 @@ export function ChatWindow() {
         <div className="chat-container">
           {!currentConversation?.messages.length ? (
             <div className="flex flex-col items-center justify-center h-full text-center px-4">
-              <div className="w-20 h-20 rounded-full bg-primary/10 backdrop-blur-md flex items-center justify-center mb-6 border border-primary/20 shadow-lg shadow-primary/5">
-                <span className="text-3xl">✨</span>
+              <div className="mb-6">
+                <Logo size="lg" />
               </div>
-              <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Welcome to SleekAI</h2>
+              <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Welcome to PyThaGO.AI</h2>
               <p className="text-muted-foreground mb-8 max-w-md">
-                Experience a premium chat interface with advanced AI capabilities. 
-                Ask anything to get started.
+                Your premium mathematics and programming AI assistant. Ask anything to get started.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl w-full">
                 {[
-                  "Generate a creative story",
-                  "Explain quantum computing",
-                  "Draft a professional email",
-                  "Help me solve a math problem"
+                  "Solve a quadratic equation",
+                  "Explain the Pythagorean theorem",
+                  "Help me with Python code",
+                  "Calculate the integral of x²"
                 ].map((suggestion, i) => (
                   <button
                     key={i}

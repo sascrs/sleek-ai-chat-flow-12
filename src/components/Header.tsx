@@ -4,6 +4,7 @@ import { Menu, Settings, Sparkles } from 'lucide-react';
 import { UpgradeButton } from './UpgradeButton';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '@/components/ui/button';
+import { Logo } from './Logo';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,12 +33,7 @@ export function Header({ toggleSidebar }: HeaderProps) {
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle sidebar</span>
           </Button>
-          <div className="flex items-center">
-            <div className="bg-gradient-to-r from-primary to-primary/70 rounded-full p-1.5 mr-2.5">
-              <Sparkles className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">SleekAI</span>
-          </div>
+          <Logo size="md" />
         </div>
         
         <div className="flex items-center gap-3">

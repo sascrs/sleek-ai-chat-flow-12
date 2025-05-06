@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Message } from '@/types';
-import { Copy, Check, Sparkles, MoreHorizontal } from 'lucide-react';
+import { Copy, Check, Calculator, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -44,7 +44,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         {message.type === 'ai' && (
           <Avatar className="h-8 w-8 ring-2 ring-primary/10 mt-1">
             <AvatarImage src="/placeholder.svg" />
-            <AvatarFallback className="bg-gradient-to-br from-ai to-ai/50"><Sparkles className="h-4 w-4 text-white" /></AvatarFallback>
+            <AvatarFallback className="bg-gradient-to-br from-purple-500 to-indigo-600"><Calculator className="h-4 w-4 text-white" /></AvatarFallback>
           </Avatar>
         )}
         
@@ -126,8 +126,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
               </Button>
               
               <Button variant="outline" size="sm" className="h-8 text-xs font-medium">
-                <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                Enhance
+                <Calculator className="h-3.5 w-3.5 mr-1.5" />
+                Compute
               </Button>
               
               <DropdownMenu>
@@ -137,9 +137,9 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem>Explain simply</DropdownMenuItem>
-                  <DropdownMenuItem>Make longer</DropdownMenuItem>
-                  <DropdownMenuItem>Make shorter</DropdownMenuItem>
+                  <DropdownMenuItem>Show step by step</DropdownMenuItem>
+                  <DropdownMenuItem>Generate code</DropdownMenuItem>
+                  <DropdownMenuItem>Explain differently</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

@@ -222,10 +222,9 @@
 
 /* Background gradients */
 .bg-premium-gradient {
-  background: linear-gradient(90deg, hsla(277, 75%, 84%, 1) 0%, hsla(297, 50%, 51%, 1) 100%);
+  background: linear-gradient(90deg, #9b87f5 0%, #7E69AB 100%);
 }
 
 .bg-premium-gradient-hover {
-  background: linear-gradient(90deg, hsla(277, 80%, 82%, 1) 0%, hsla(297, 55%, 49%, 1) 100%);
+  background: linear-gradient(90deg, #8c78e6 0%, #6e5a9b 100%);
 }
-

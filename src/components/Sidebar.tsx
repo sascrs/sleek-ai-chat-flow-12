@@ -6,13 +6,13 @@ import {
   Image, 
   Settings, 
   PlusCircle,
-  Sparkles,
   ChevronLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useChat } from '@/hooks/useChat';
+import { Logo } from './Logo';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -44,12 +44,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         className={`fixed inset-y-0 left-0 w-72 z-40 transform transition-transform duration-300 ease-in-out ${sidebarClass} flex flex-col border-r bg-sidebar/50 backdrop-blur-md`}
       >
         <div className="flex items-center justify-between p-4">
-          <div className="flex items-center">
-            <div className="bg-gradient-to-r from-primary to-primary/70 rounded-full p-1.5 mr-2.5">
-              <Sparkles className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-lg font-semibold">SleekAI</span>
-          </div>
+          <Logo size="sm" />
           <Button 
             variant="ghost" 
             size="icon" 
@@ -142,7 +137,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="p-4 border-t">
           <div className="bg-gradient-to-br from-premium/20 to-premium-muted/20 backdrop-blur-sm rounded-xl p-4 border border-premium/30">
             <div className="flex items-center mb-2">
-              <Sparkles className="h-4 w-4 text-premium mr-2.5" />
+              <div className="h-4 w-4 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full mr-2.5"></div>
               <span className="text-sm font-semibold">Free Plan</span>
             </div>
             <p className="text-xs text-muted-foreground mb-3">

@@ -91,7 +91,7 @@ export function ChatInput() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Message SleekAI..."
+            placeholder="Message PyThaGO.AI..."
             className="min-h-12 w-full resize-none rounded-xl border pr-20 py-3.5 pl-4 shadow-sm bg-background/90 focus-visible:ring-1 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70"
             disabled={isProcessing}
           />

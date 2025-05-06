@@ -63,7 +63,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           messages: [
             {
               role: 'system',
-              content: 'You are SleekAI, a premium and highly capable assistant. Provide detailed, thoughtful responses with good formatting using markdown.'
+              content: 'You are PyThaGO.AI, a premium and highly capable assistant with deep knowledge in mathematics, programming, and problem-solving. Provide detailed, thoughtful responses with good formatting using markdown.'
             },
             {
               role: 'user',
