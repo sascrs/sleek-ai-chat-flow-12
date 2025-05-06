@@ -13,7 +13,7 @@ export function ChatLayout() {
   
   return (
     <div className="h-screen flex flex-col">
-      <Header toggleSidebar={toggleSidebar} />
+      <Header onMenuClick={toggleSidebar} />
       
       <div className="flex flex-1 overflow-hidden">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
