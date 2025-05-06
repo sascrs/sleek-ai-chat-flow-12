@@ -4,7 +4,7 @@ import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
 import { useChat } from '@/hooks/useChat';
 import { Logo } from './Logo';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Sparkles, MathFormula, Brain, Code, Calculator, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function ChatWindow() {
@@ -93,42 +93,69 @@ export function ChatWindow() {
                 <Logo size="lg" animate={true} />
               </div>
               
-              <div className="glass-card p-6 rounded-2xl shadow-3d max-w-md w-full mb-8">
-                <h2 className="text-2xl font-bold mb-3 font-space-grotesk bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent">
-                  Welcome to PyThaGO.AI
-                </h2>
-                <p className="text-muted-foreground mb-5">
+              <div className="bg-gradient-to-br from-violet-500/10 via-indigo-500/5 to-purple-500/10 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-8 max-w-md w-full mb-8 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600"></div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-1.5 rounded-md">
+                    <Sparkles className="h-4 w-4 text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold font-space-grotesk bg-gradient-to-r from-violet-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                    PyThaGO.AI
+                  </h2>
+                </div>
+                <p className="text-muted-foreground mb-6">
                   Your premium mathematics and programming AI assistant. Ask anything to get started.
                 </p>
                 
-                <div className="h-0.5 w-full bg-gradient-to-r from-purple-200/20 via-indigo-300/30 to-purple-200/20 rounded-full my-5"></div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {[
-                    "Solve a quadratic equation",
-                    "Explain the Pythagorean theorem",
-                    "Help me with Python code",
-                    "Calculate the integral of x²"
-                  ].map((suggestion, i) => (
-                    <button
-                      key={i}
-                      className="btn-3d text-sm bg-background hover:bg-accent transition-all p-3.5 rounded-lg text-left border border-border/60 shadow-xl hover:shadow-md hover-glow flex items-center justify-between"
-                      onClick={() => {
-                        const textarea = document.querySelector('textarea');
-                        if (textarea) {
-                          textarea.value = suggestion;
-                          textarea.focus();
-                          // Trigger an input event to update the textarea value
-                          const event = new Event('input', { bubbles: true });
-                          textarea.dispatchEvent(event);
-                        }
-                      }}
-                    >
-                      <span className="truncate">{suggestion}</span>
-                      <span className="ml-2 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary/40"></span>
-                    </button>
-                  ))}
+                <div className="grid grid-cols-1 gap-3 mb-6">
+                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-lg hover:shadow-indigo-500/10 group">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 bg-indigo-500/20 p-2 rounded-md text-indigo-400 group-hover:bg-indigo-500/30 transition-colors">
+                        <MathFormula className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium text-sm mb-1 group-hover:text-indigo-300 transition-colors">Solve Complex Equations</h3>
+                        <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">Get step-by-step solutions for quadratic, polynomial or differential equations</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-lg hover:shadow-purple-500/10 group">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 bg-purple-500/20 p-2 rounded-md text-purple-400 group-hover:bg-purple-500/30 transition-colors">
+                        <Code className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium text-sm mb-1 group-hover:text-purple-300 transition-colors">Code Assistance</h3>
+                        <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">Get help with Python, JavaScript, and other programming languages</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-lg hover:shadow-violet-500/10 group">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 bg-violet-500/20 p-2 rounded-md text-violet-400 group-hover:bg-violet-500/30 transition-colors">
+                        <Brain className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium text-sm mb-1 group-hover:text-violet-300 transition-colors">Deep Learning Concepts</h3>
+                        <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">Explore machine learning, neural networks, and AI fundamentals</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                
+                <div className="flex gap-2 mt-2">
+                  <Button size="sm" variant="outline" className="w-full bg-white/5 border-white/10 hover:bg-white/10 hover:text-white gap-2 text-xs h-8">
+                    <Calculator className="h-3.5 w-3.5" />
+                    <span>Explore Calculators</span>
+                  </Button>
+                  <Button size="sm" variant="outline" className="w-full bg-white/5 border-white/10 hover:bg-white/10 hover:text-white gap-2 text-xs h-8">
+                    <BookOpen className="h-3.5 w-3.5" />
+                    <span>View Tutorials</span>
+                  </Button>
+                </div>
+                
               </div>
               
               <div className="animate-scale-up">
