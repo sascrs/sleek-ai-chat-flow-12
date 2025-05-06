@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -111,6 +112,31 @@
 
     --user: 217 91% 50%;
     --user-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased bg-pattern;
+    background-image: radial-gradient(
+      circle at center,
+      rgba(99, 102, 241, 0.08) 0.5px,
+      rgba(var(--background) / 0.01) 0.5px
+    );
+    background-size: 24px 24px;
+  }
+  
+  /* Typography improvements */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-space-grotesk tracking-tight;
   }
 }
 
@@ -360,3 +386,4 @@
 .card-3d:hover {
   transform: translateY(-5px) rotateX(2deg) rotateY(-2deg);
 }
+

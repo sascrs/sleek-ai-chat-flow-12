@@ -4,7 +4,7 @@ import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
 import { useChat } from '@/hooks/useChat';
 import { Logo } from './Logo';
-import { ChevronDown, Sparkles, Brain, Code, Calculator, BookOpen, Pi } from 'lucide-react';
+import { ChevronDown, Sparkles, MathFormula, Brain, Code, Calculator, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function ChatWindow() {
@@ -111,7 +111,7 @@ export function ChatWindow() {
                   <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-lg hover:shadow-indigo-500/10 group">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 bg-indigo-500/20 p-2 rounded-md text-indigo-400 group-hover:bg-indigo-500/30 transition-colors">
-                        <Pi className="h-4 w-4" />
+                        <MathFormula className="h-4 w-4" />
                       </div>
                       <div className="flex-1">
                         <h3 className="font-medium text-sm mb-1 group-hover:text-indigo-300 transition-colors">Solve Complex Equations</h3>
