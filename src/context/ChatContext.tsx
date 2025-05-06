@@ -3,6 +3,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { Message, Conversation, Attachment } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
+import { useSettings } from './SettingsContext';
 
 interface ChatContextType {
   conversations: Conversation[];
@@ -18,14 +19,12 @@ interface ChatContextType {
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
-// The API key for the Groq AI service
-const API_KEY = "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";
-
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const { aiProviders } = useSettings();
 
   // Initialize with a default conversation
   React.useEffect(() => {
@@ -52,14 +51,46 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       const controller = new AbortController();
       setAbortController(controller);
       
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      // Get the active provider from settings
+      const activeProvider = aiProviders.find(provider => provider.isActive);
+      
+      // Default to Groq if no active provider with an API key is found
+      const API_KEY = activeProvider?.apiKey || "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";
+      const providerName = activeProvider?.name || "Groq";
+      
+      // If the active provider doesn't have an API key set, show a warning toast
+      if (activeProvider && !activeProvider.apiKey) {
+        toast.warning(`No API key set for ${activeProvider.name}. Please add an API key in AI Preferences.`);
+      }
+      
+      // Use different endpoints based on the provider
+      let endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+      let model = 'llama3-70b-8192';
+      
+      if (activeProvider) {
+        switch (activeProvider.id) {
+          case 'openai':
+            endpoint = 'https://api.openai.com/v1/chat/completions';
+            model = 'gpt-4o-mini';
+            break;
+          case 'llama':
+            // This would need specific endpoint details
+            break;
+          case 'deepseek':
+            // This would need specific endpoint details
+            break;
+          // Default is already set to Groq
+        }
+      }
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'llama3-70b-8192',
+          model: model,
           messages: [
             {
               role: 'system',
@@ -78,7 +109,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to get AI response');
+        throw new Error(errorData.error?.message || `Failed to get response from ${providerName}`);
       }
 
       const data = await response.json();

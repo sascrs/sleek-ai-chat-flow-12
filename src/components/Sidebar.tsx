@@ -13,6 +13,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useChat } from '@/hooks/useChat';
 import { Logo } from './Logo';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { conversations, startNewConversation, currentConversation, setCurrentConversation } = useChat();
+  const location = useLocation();
   
   const handleNewChat = () => {
     startNewConversation();
@@ -99,6 +101,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <Button
                 variant="ghost"
                 className="w-full justify-start rounded-lg"
+                as={Link}
+                to="/"
               >
                 <MessageSquare className="h-4 w-4 mr-2.5" />
                 Chat
@@ -124,13 +128,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           
           <div className="mb-4">
             <h4 className="text-xs font-medium mb-2 text-sidebar-foreground/60 px-2">Settings</h4>
-            <Button
-              variant="ghost"
-              className="w-full justify-start rounded-lg"
-            >
-              <Settings className="h-4 w-4 mr-2.5" />
-              AI Preferences
-            </Button>
+            <Link to="/ai-preferences">
+              <Button
+                variant="ghost"
+                className={`w-full justify-start rounded-lg ${
+                  location.pathname === '/ai-preferences' ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : ''
+                }`}
+              >
+                <Settings className="h-4 w-4 mr-2.5" />
+                AI Preferences
+              </Button>
+            </Link>
           </div>
         </ScrollArea>
         
