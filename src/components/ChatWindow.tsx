@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
@@ -162,13 +161,6 @@ export function ChatWindow() {
                   </Button>
                 </div>
                 
-              </div>
-              
-              <div className="animate-scale-up">
-                <div className="rounded-full px-4 py-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-xs text-primary-foreground/70 flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-                  <span>Pro version • Unlimited questions</span>
-                </div>
               </div>
             </div>
           ) : (
