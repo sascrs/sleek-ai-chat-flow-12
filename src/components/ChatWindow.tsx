@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
@@ -48,7 +49,7 @@ export function ChatWindow() {
     const particles = [];
     const symbols = ['π', '∑', '∫', '√', 'θ', '∞', 'δ', 'Δ', 'φ'];
     
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 24; i++) {
       const symbol = symbols[Math.floor(Math.random() * symbols.length)];
       const delay = Math.random() * 5;
       const x = Math.random() * 100;
@@ -79,6 +80,11 @@ export function ChatWindow() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)] relative">
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="animated-blob bg-purple-400/20 w-[500px] h-[500px] -top-48 -right-48"></div>
+        <div className="animated-blob bg-blue-400/20 w-[600px] h-[600px] -bottom-48 -left-48" style={{ animationDelay: '-3s' }}></div>
+      </div>
+      
       <div 
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-custom"
@@ -88,17 +94,18 @@ export function ChatWindow() {
             <div className="flex flex-col items-center justify-center h-full text-center px-4 math-symbols relative">
               {renderMathParticles()}
               
-              <div className="mb-6 animate-float">
+              <div className="mb-6 animate-float-slow relative">
+                <div className="absolute inset-0 -z-10 bg-gradient-radial from-primary/5 to-transparent rounded-full blur-2xl"></div>
                 <Logo size="lg" animate={true} />
               </div>
               
-              <div className="bg-gradient-to-br from-violet-500/10 via-indigo-500/5 to-purple-500/10 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-8 max-w-md w-full mb-8 relative overflow-hidden">
+              <div className="glass-card p-8 max-w-md w-full mb-8 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600"></div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-1.5 rounded-md">
                     <Sparkles className="h-4 w-4 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold font-space-grotesk bg-gradient-to-r from-violet-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                  <h2 className="text-2xl font-bold font-space-grotesk gradient-text">
                     PyThaGO.AI
                   </h2>
                 </div>
@@ -107,7 +114,7 @@ export function ChatWindow() {
                 </p>
                 
                 <div className="grid grid-cols-1 gap-3 mb-6">
-                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-lg hover:shadow-indigo-500/10 group">
+                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-premium/10 group">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 bg-indigo-500/20 p-2 rounded-md text-indigo-400 group-hover:bg-indigo-500/30 transition-colors">
                         <Pi className="h-4 w-4" />
@@ -119,7 +126,7 @@ export function ChatWindow() {
                     </div>
                   </div>
                   
-                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-lg hover:shadow-purple-500/10 group">
+                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-purple-500/10 group">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 bg-purple-500/20 p-2 rounded-md text-purple-400 group-hover:bg-purple-500/30 transition-colors">
                         <Code className="h-4 w-4" />
@@ -131,7 +138,7 @@ export function ChatWindow() {
                     </div>
                   </div>
                   
-                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-lg hover:shadow-violet-500/10 group">
+                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-violet-500/10 group">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 bg-violet-500/20 p-2 rounded-md text-violet-400 group-hover:bg-violet-500/30 transition-colors">
                         <Brain className="h-4 w-4" />
@@ -185,7 +192,7 @@ export function ChatWindow() {
       {/* Scroll to bottom button */}
       {showScrollButton && (
         <Button
-          className="absolute bottom-24 right-6 rounded-full shadow-lg h-10 w-10 p-0 bg-primary/90 hover:bg-primary animate-bounce"
+          className="absolute bottom-24 right-6 rounded-full shadow-md h-10 w-10 p-0 bg-primary/90 hover:bg-primary animate-bounce"
           onClick={scrollToBottom}
         >
           <ChevronDown className="h-5 w-5" />

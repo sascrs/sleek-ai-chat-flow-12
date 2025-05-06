@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -34,7 +35,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 263 70% 50%;
 
-    --radius: 1rem;
+    --radius: 0.85rem;
 
     --sidebar-background: 220 40% 99%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -46,9 +47,9 @@
     --sidebar-ring: 263 90% 51%;
 
     /* Premium and AI chat colors */
-    --premium: 277 75% 84%;
+    --premium: 267 75% 64%;
     --premium-foreground: 0 0% 100%;
-    --premium-muted: 297 50% 51%;
+    --premium-muted: 267 60% 55%;
     --premium-muted-foreground: 0 0% 100%;
 
     --ai: 263 70% 50%;
@@ -61,31 +62,31 @@
   }
 
   .dark {
-    --background: 224 71% 3%;
+    --background: 224 71% 4%;
     --foreground: 213 31% 91%;
 
-    --card: 224 71% 4%;
+    --card: 224 71% 5%;
     --card-foreground: 213 31% 91%;
 
-    --popover: 224 71% 4%;
+    --popover: 224 71% 5%;
     --popover-foreground: 213 31% 91%;
 
     --primary: 263 70% 60%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 222.2 47.4% 10.2%;
+    --secondary: 222.2 47.4% 12%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 223 47% 9%;
     --muted-foreground: 215.4 16.3% 56.9%;
 
-    --accent: 222.2 47.4% 11.2%;
+    --accent: 222.2 47.4% 12%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 15.5%;
+    --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 263 70% 60%;
 
@@ -99,9 +100,9 @@
     --sidebar-ring: 263 90% 60%;
 
     /* Premium and AI chat colors - dark mode */
-    --premium: 277 75% 75%;
+    --premium: 267 75% 70%;
     --premium-foreground: 0 0% 100%;
-    --premium-muted: 297 50% 41%;
+    --premium-muted: 267 60% 50%;
     --premium-muted-foreground: 0 0% 100%;
 
     --ai: 263 70% 60%;
@@ -121,13 +122,14 @@
   
   html {
     font-family: 'Inter', sans-serif;
+    @apply scroll-smooth;
   }
 
   body {
-    @apply bg-background text-foreground antialiased bg-pattern;
+    @apply bg-background text-foreground antialiased;
     background-image: radial-gradient(
       circle at center,
-      rgba(99, 102, 241, 0.08) 0.5px,
+      rgba(99, 102, 241, 0.04) 0.5px,
       rgba(var(--background) / 0.01) 0.5px
     );
     background-size: 24px 24px;
@@ -142,7 +144,7 @@
 @layer components {
   /* Premium Button Style */
   .premium-button {
-    @apply bg-premium-gradient text-premium-foreground shadow-premium transition-all duration-300 hover:shadow-lg hover:bg-premium-gradient-hover font-semibold relative overflow-hidden;
+    @apply bg-premium text-premium-foreground shadow-premium transition-all duration-300 hover:shadow-lg hover:shadow-premium/20 font-semibold relative overflow-hidden;
   }
   
   .premium-button::after {
@@ -161,11 +163,11 @@
 
   /* Message bubbles */
   .message-bubble {
-    @apply rounded-xl py-4 px-5 mb-6 max-w-[92%] md:max-w-[85%] lg:max-w-[75%] shadow-sm animate-fade-in border backdrop-blur-sm transition-all duration-300;
+    @apply rounded-xl py-4 px-5 mb-6 max-w-[92%] md:max-w-[85%] lg:max-w-[75%] shadow-soft animate-fade-in border backdrop-blur-sm transition-all duration-300;
   }
 
   .ai-message {
-    @apply bg-gradient-to-br from-ai-muted/95 to-ai-muted/90 text-ai-muted-foreground shadow-xl relative border-ai/10;
+    @apply bg-gradient-to-br from-ai-muted/90 to-ai-muted/80 text-ai-muted-foreground shadow-glass relative border-ai/10;
   }
 
   .ai-message::before {
@@ -173,7 +175,7 @@
   }
 
   .user-message {
-    @apply bg-gradient-to-br from-user/90 to-user/80 text-user-foreground ml-auto backdrop-blur-sm shadow-md border-user/10;
+    @apply bg-gradient-to-br from-user/90 to-user/80 text-user-foreground ml-auto backdrop-blur-sm shadow-soft border-user/10;
   }
 
   .user-message::before {
@@ -191,7 +193,7 @@
 
   /* Code blocks */
   .code-block {
-    @apply bg-muted/30 text-muted-foreground rounded-md overflow-hidden my-3 border border-border/60 shadow-md;
+    @apply bg-muted/30 text-muted-foreground rounded-md overflow-hidden my-3 border border-border/60 shadow-glass;
   }
 
   /* File upload area */
@@ -211,11 +213,13 @@
   /* Custom scrollbar */
   .scrollbar-custom {
     @apply overflow-auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 58, 237, 0.2) transparent;
   }
   
   /* Define custom scrollbar styles */
   .scrollbar-custom::-webkit-scrollbar {
-    @apply w-2 h-2;
+    @apply w-1.5 h-1.5;
   }
   
   .scrollbar-custom::-webkit-scrollbar-track {
@@ -233,17 +237,22 @@
   
   .btn-3d::before {
     content: '';
-    @apply absolute inset-0 -bottom-1.5 rounded-xl bg-black/20 -z-10;
+    @apply absolute inset-0 -bottom-[2px] rounded-xl bg-black/10 -z-10;
   }
   
   /* Glassmorphism card */
   .glass-card {
-    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-lg;
+    @apply bg-white/8 backdrop-blur-md border border-white/10 shadow-glass;
   }
   
-  /* Hex pattern background */
-  .bg-pattern {
-    background-size: 30px 30px;
+  /* Enhanced input field */
+  .enhanced-input {
+    @apply bg-background/60 shadow-soft border-border/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all;
+  }
+
+  /* Blob animation */
+  .animated-blob {
+    @apply absolute -z-10 rounded-full blur-3xl opacity-20 animate-blob;
   }
 }
 
@@ -256,9 +265,9 @@
   background: linear-gradient(135deg, #8c78e6 0%, #6e5a9b 100%);
 }
 
-/* 3D Button effect */
-.btn-3d {
-  transform-style: preserve-3d;
+/* Gradient text */
+.gradient-text {
+  @apply bg-gradient-to-r from-primary via-premium to-violet-600 bg-clip-text text-transparent;
 }
 
 /* Message bubble animations and effects */
@@ -280,13 +289,18 @@
 }
 
 .ai-message {
-  box-shadow: 0 4px 20px -5px rgba(124, 58, 237, 0.15);
+  box-shadow: 0 4px 20px -5px rgba(124, 58, 237, 0.12);
   animation: message-appear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
 .user-message {
-  box-shadow: 0 4px 20px -5px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 4px 20px -5px rgba(59, 130, 246, 0.12);
   animation: message-appear 0.4s 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* Shadow effects */
+.shadow-neon {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
 }
 
 /* Custom animations */
@@ -329,7 +343,7 @@
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
 }
 
 .shimmer {
@@ -347,41 +361,11 @@
   font-family: 'Space Grotesk', system-ui, sans-serif;
 }
 
-/* Input and button enhanced styles */
-.enhanced-input {
-  @apply bg-background/70 shadow-inner border-border/70 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all;
+.letter-spacing-tight {
+  letter-spacing: -0.025em;
 }
 
-.animated-gradient {
-  background: linear-gradient(-45deg, #9b87f5, #7E69AB, #6e5a9b, #8c78e6);
-  background-size: 300% 300%;
-  animation: gradient-animation 5s ease infinite;
-}
-
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Math symbols decorative elements */
-.math-symbols::before {
-  content: '∑ ∫ π √ ∞';
-  @apply absolute -z-10 opacity-5 text-4xl font-bold text-primary;
-}
-
-/* 3D Card effect */
-.card-3d {
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
-}
-
-.card-3d:hover {
-  transform: translateY(-5px) rotateX(2deg) rotateY(-2deg);
+/* Background effects */
+.bg-pattern {
+  background-size: 30px 30px;
 }

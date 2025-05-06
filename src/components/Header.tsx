@@ -44,7 +44,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   }, []);
 
   return (
-    <header className={`border-b border-border/40 bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/80 ${scrolled ? 'shadow-sm' : ''} transition-all duration-300 sticky top-0 z-20`}>
+    <header className={`border-b border-border/40 bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/70 ${scrolled ? 'shadow-soft' : ''} transition-all duration-300 sticky top-0 z-20`}>
       <div className="flex h-14 items-center justify-between px-4">
         <div className="flex items-center">
           <Button variant="ghost" size="icon" onClick={onMenuClick} className="md:hidden hover:bg-accent/60">
@@ -66,7 +66,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           {activeProvider && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center gap-2 rounded-full border border-border/60 bg-background/80 backdrop-blur-md px-3 py-1 text-xs shadow-sm hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-center gap-2 rounded-full border border-border/60 bg-background/70 backdrop-blur-md px-3 py-1 text-xs shadow-sm hover:border-primary/30 transition-all duration-300">
                   <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
                   <span className="font-medium">
                     {modelNameMap[activeProvider.id] || activeProvider.name}
@@ -92,7 +92,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           <div className="sm:hidden">
             <Button 
               size="icon" 
-              className="h-9 w-9 rounded-full bg-gradient-to-br from-premium to-premium-muted/70 text-white shadow-md"
+              className="h-9 w-9 rounded-full bg-gradient-to-br from-premium to-premium-muted/80 text-white shadow-md"
             >
               <Crown className="h-4 w-4" />
             </Button>

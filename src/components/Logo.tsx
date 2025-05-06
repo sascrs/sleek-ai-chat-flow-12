@@ -40,7 +40,7 @@ export function Logo({ size = 'md', className = '', animate = false }: LogoProps
     <div className={`flex items-center ${className}`} onMouseEnter={startAnimation}>
       <div className="relative">
         {/* Animated background elements */}
-        <div className={`absolute inset-0 rounded-full ${isAnimating ? 'animate-pulse-soft' : ''} blur-md bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 opacity-80`}></div>
+        <div className={`absolute inset-0 rounded-full ${isAnimating ? 'animate-pulse-soft' : ''} blur-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 opacity-80`}></div>
         
         {/* Orbital particles */}
         {isAnimating && (
@@ -52,7 +52,7 @@ export function Logo({ size = 'md', className = '', animate = false }: LogoProps
         
         {/* Main logo shape */}
         <div 
-          className={`relative bg-gradient-to-br from-purple-500 via-violet-600 to-indigo-700 rounded-full flex items-center justify-center shadow-lg ${isAnimating ? 'animate-float' : ''} transition-all duration-300`} 
+          className={`relative bg-gradient-to-br from-premium via-violet-600 to-indigo-700 rounded-full flex items-center justify-center shadow-md ${isAnimating ? 'animate-float' : ''} transition-all duration-300`} 
           style={{ width, height }}
         >
           <svg 
@@ -76,10 +76,10 @@ export function Logo({ size = 'md', className = '', animate = false }: LogoProps
       </div>
       
       <div className="ml-2 font-bold flex items-center">
-        <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent font-space-grotesk">PyTha</span>
+        <span className="bg-gradient-to-r from-premium to-violet-600 bg-clip-text text-transparent font-space-grotesk">PyTha</span>
         <span className="text-primary font-extrabold font-space-grotesk">GO.AI</span>
         {isAnimating && (
-          <span className="absolute ml-[6.5rem] mt-[-0.8rem] text-[0.6rem] font-space-grotesk bg-gradient-to-r from-indigo-400 to-purple-400 text-white px-1.5 py-0.5 rounded-full animate-bounce">Pro</span>
+          <span className="absolute ml-[6.5rem] mt-[-0.8rem] text-[0.6rem] font-space-grotesk bg-gradient-to-r from-indigo-400 to-premium text-white px-1.5 py-0.5 rounded-full animate-bounce">Pro</span>
         )}
       </div>
     </div>
