@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { Message, Conversation, Attachment } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'sonner';
 
 interface ChatContextType {
   conversations: Conversation[];
@@ -17,10 +18,14 @@ interface ChatContextType {
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
+// The API key for the AI service
+const API_KEY = "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";
+
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   // Initialize with a default conversation
   React.useEffect(() => {
@@ -40,6 +45,54 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
     setConversations((prev) => [newConversation, ...prev]);
     setCurrentConversation(newConversation);
+  };
+
+  const fetchAIResponse = async (messageContent: string): Promise<string> => {
+    try {
+      const controller = new AbortController();
+      setAbortController(controller);
+      
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama3-70b-8192',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are SleekAI, a premium and highly capable assistant. Provide detailed, thoughtful responses with good formatting using markdown.'
+            },
+            {
+              role: 'user',
+              content: messageContent
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1024,
+        }),
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Failed to get AI response');
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      if ((error as Error).name === 'AbortError') {
+        return 'Response generation stopped.';
+      }
+      console.error('Error fetching AI response:', error);
+      toast.error('Failed to get AI response. Please try again.');
+      return 'Sorry, I encountered an error processing your request. Please try again.';
+    } finally {
+      setAbortController(null);
+    }
   };
 
   const sendMessage = async (content: string, attachments?: Attachment[]) => {
@@ -78,9 +131,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
     setIsProcessing(true);
 
-    // Simulate AI response after a delay
-    setTimeout(() => {
-      const aiResponse = getAIResponse(content);
+    try {
+      // Get AI response using the API
+      const aiResponse = await fetchAIResponse(content);
       
       // Update AI message with response
       const completedAiMessage: Message = {
@@ -101,8 +154,31 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       setConversations((prev) =>
         prev.map((conv) => (conv.id === finalConversation.id ? finalConversation : conv))
       );
+    } catch (error) {
+      console.error('Error in sendMessage:', error);
+      
+      // Update AI message with error
+      const errorAiMessage: Message = {
+        ...aiMessage,
+        content: 'Sorry, an error occurred while generating a response.',
+        isProcessing: false,
+      };
+
+      const errorConversation = {
+        ...updatedConversation,
+        messages: [
+          ...updatedConversation.messages.slice(0, -1),
+          errorAiMessage,
+        ],
+      };
+
+      setCurrentConversation(errorConversation);
+      setConversations((prev) =>
+        prev.map((conv) => (conv.id === errorConversation.id ? errorConversation : conv))
+      );
+    } finally {
       setIsProcessing(false);
-    }, 2000);
+    }
   };
 
   const regenerateLastResponse = async () => {
@@ -149,9 +225,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     
     setIsProcessing(true);
     
-    // Simulate regenerating response
-    setTimeout(() => {
-      const aiResponse = getAIResponse(userMessage.content);
+    try {
+      // Get AI response using the API
+      const aiResponse = await fetchAIResponse(userMessage.content);
       
       const completedAiMessage: Message = {
         ...aiMessage,
@@ -171,40 +247,41 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       setConversations((prev) =>
         prev.map((conv) => (conv.id === finalConversation.id ? finalConversation : conv))
       );
+    } catch (error) {
+      console.error('Error in regenerateLastResponse:', error);
+      
+      // Update AI message with error
+      const errorAiMessage: Message = {
+        ...aiMessage,
+        content: 'Sorry, an error occurred while regenerating the response.',
+        isProcessing: false,
+      };
+      
+      const errorConversation = {
+        ...updatedConversation,
+        messages: [
+          ...updatedConversation.messages.slice(0, -1),
+          errorAiMessage,
+        ],
+      };
+      
+      setCurrentConversation(errorConversation);
+      setConversations((prev) =>
+        prev.map((conv) => (conv.id === errorConversation.id ? errorConversation : conv))
+      );
+    } finally {
       setIsProcessing(false);
-    }, 2000);
+    }
   };
 
   const stopGenerating = () => {
     if (!isProcessing || !currentConversation) return;
     
-    setIsProcessing(false);
-    
-    // Find the processing message and mark it as complete
-    const messages = [...currentConversation.messages];
-    const processingIndex = messages.findIndex(m => m.isProcessing);
-    
-    if (processingIndex !== -1) {
-      const processingMessage = messages[processingIndex];
-      
-      const completedMessage: Message = {
-        ...processingMessage,
-        content: processingMessage.content || "Generation stopped.",
-        isProcessing: false,
-      };
-      
-      messages[processingIndex] = completedMessage;
-      
-      const updatedConversation = {
-        ...currentConversation,
-        messages,
-      };
-      
-      setCurrentConversation(updatedConversation);
-      setConversations((prev) =>
-        prev.map((conv) => (conv.id === updatedConversation.id ? updatedConversation : conv))
-      );
+    if (abortController) {
+      abortController.abort();
     }
+    
+    setIsProcessing(false);
   };
 
   const clearChat = () => {
@@ -220,84 +297,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setConversations((prev) =>
       prev.map((conv) => (conv.id === clearedConversation.id ? clearedConversation : conv))
     );
-  };
-
-  // Simulated AI response generator
-  const getAIResponse = (userMessage: string) => {
-    const responses = [
-      `I understand you're asking about "${userMessage}". Let me provide a structured response:
-
-## Overview
-This is a premium AI response that demonstrates formatting capabilities including headings, lists, and code blocks.
-
-## Key Points
-* First, let's address your main question
-* Second, here's some additional context
-* Third, I can suggest some next steps
-
-## Code Example
-\`\`\`javascript
-// Here's a sample code implementation
-function processRequest(input) {
-  return {
-    result: input + " processed successfully",
-    timestamp: new Date().toISOString()
-  };
-}
-\`\`\`
-
-Would you like me to expand on any particular aspect of this response?`,
-      `Thanks for your message about "${userMessage}". Here's what you need to know:
-
-## Analysis
-I've analyzed your request and can provide the following insights.
-
-## Recommendations
-1. Consider approaching this from a different angle
-2. Implement the suggested solutions step by step
-3. Review the results and iterate as needed
-
-## Technical Details
-\`\`\`python
-# Python implementation
-def analyze_input(text):
-    return {
-        "sentiment": "positive",
-        "key_topics": ["AI", "technology", "implementation"],
-        "confidence_score": 0.87
-    }
-\`\`\`
-
-Is there anything specific from this response you'd like me to elaborate on?`,
-      `I've processed your query about "${userMessage}" and prepared a comprehensive response:
-
-## Summary
-Your request touches on several important concepts that I'll address systematically.
-
-## Detailed Explanation
-- **First concept**: Here's what you need to understand
-- **Second concept**: This builds upon the first point
-- **Third concept**: Finally, this ties everything together
-
-## Implementation Strategy
-\`\`\`typescript
-interface Solution {
-  approach: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  timeRequired: number; // in hours
-}
-
-const recommendedSolution: Solution = {
-  approach: "Integrated framework",
-  difficulty: "medium",
-  timeRequired: 4.5
-};
-\`\`\`
-
-Would you like me to create a more detailed plan based on this analysis?`
-    ];
-
-    return responses[Math.floor(Math.random() * responses.length)];
   };
 
   return (
