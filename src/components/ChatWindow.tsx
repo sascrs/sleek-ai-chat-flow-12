@@ -1,13 +1,25 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
 import { useChat } from '@/hooks/useChat';
 import { Logo } from './Logo';
-import { ChevronDown, Sparkles, Pi, Brain, Code, Calculator, BookOpen } from 'lucide-react';
+import { ChevronDown, Sparkles, Pi, Brain, Code, Calculator, BookOpen, Search, Lightbulb, MessageCircle, Edit, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+
+interface ChatPrompt {
+  id: string;
+  title: string;
+  description: string;
+  prompt: string;
+  icon: React.ElementType;
+  color: string;
+}
 
 export function ChatWindow() {
-  const { currentConversation } = useChat();
+  const { currentConversation, sendMessage } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -41,6 +53,10 @@ export function ChatWindow() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handlePromptClick = (prompt: string) => {
+    sendMessage(prompt);
   };
 
   // Generate 3D math particles for the welcome screen
@@ -77,6 +93,58 @@ export function ChatWindow() {
     return particles;
   };
 
+  // Define chat prompts
+  const chatPrompts: ChatPrompt[] = [
+    {
+      id: "math-problem",
+      title: "Probleme Matematice",
+      description: "Rezolvă ecuații și concepte matematice complexe",
+      prompt: "Rezolvă pas cu pas ecuația diferențială: dy/dx = 2xy cu y(0) = 1",
+      icon: Pi,
+      color: "bg-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/30"
+    },
+    {
+      id: "code-assistance",
+      title: "Asistență Cod",
+      description: "Ajutor cu programare și debugging",
+      prompt: "Explică-mi cum să implementez un algoritm de sortare rapidă în Python",
+      icon: Code,
+      color: "bg-purple-500/20 text-purple-400 group-hover:bg-purple-500/30"
+    },
+    {
+      id: "learning-concepts",
+      title: "Învățare Concepte",
+      description: "Explicații detaliate pentru învățare",
+      prompt: "Explică-mi conceptul de Machine Learning într-un mod simplu de înțeles",
+      icon: Brain, 
+      color: "bg-violet-500/20 text-violet-400 group-hover:bg-violet-500/30"
+    },
+    {
+      id: "research",
+      title: "Cercetare",
+      description: "Ajutor în găsirea și sintetizarea informațiilor",
+      prompt: "Ce sunt rețelele neuronale și cum funcționează ele?",
+      icon: Search,
+      color: "bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30" 
+    },
+    {
+      id: "creative-ideas",
+      title: "Idei Creative",
+      description: "Generarea de idei și inspirație",
+      prompt: "Dă-mi 5 idei de proiecte creative care combină matematica cu arta",
+      icon: Lightbulb,
+      color: "bg-amber-500/20 text-amber-400 group-hover:bg-amber-500/30"
+    },
+    {
+      id: "explain",
+      title: "Explicații",
+      description: "Explicații detaliate pe diverse subiecte",
+      prompt: "Explică Teorema lui Fermat și implicațiile sale în matematică modernă",
+      icon: MessageCircle,
+      color: "bg-green-500/20 text-green-400 group-hover:bg-green-500/30"
+    }
+  ];
+
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)] relative">
       <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -98,7 +166,7 @@ export function ChatWindow() {
                 <Logo size="lg" animate={true} />
               </div>
               
-              <div className="glass-card p-8 max-w-md w-full mb-8 relative overflow-hidden">
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 shadow-glass p-8 max-w-md w-full mb-8 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600"></div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-1.5 rounded-md">
@@ -109,58 +177,55 @@ export function ChatWindow() {
                   </h2>
                 </div>
                 <p className="text-muted-foreground mb-6">
-                  Your premium mathematics and programming AI assistant. Ask anything to get started.
+                  Asistentul tău premium pentru matematică și programare. Alege unul dintre prompt-urile de mai jos pentru a începe.
                 </p>
                 
                 <div className="grid grid-cols-1 gap-3 mb-6">
-                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-premium/10 group">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5 bg-indigo-500/20 p-2 rounded-md text-indigo-400 group-hover:bg-indigo-500/30 transition-colors">
-                        <Pi className="h-4 w-4" />
+                  {chatPrompts.slice(0, 3).map((prompt) => (
+                    <button 
+                      key={prompt.id}
+                      className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-premium/10 group text-left"
+                      onClick={() => handlePromptClick(prompt.prompt)}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`mt-0.5 p-2 rounded-md transition-colors ${prompt.color}`}>
+                          <prompt.icon className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-sm mb-1 group-hover:text-indigo-300 transition-colors">{prompt.title}</h3>
+                          <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">{prompt.description}</p>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-sm mb-1 group-hover:text-indigo-300 transition-colors">Solve Complex Equations</h3>
-                        <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">Get step-by-step solutions for quadratic, polynomial or differential equations</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-purple-500/10 group">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5 bg-purple-500/20 p-2 rounded-md text-purple-400 group-hover:bg-purple-500/30 transition-colors">
-                        <Code className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-sm mb-1 group-hover:text-purple-300 transition-colors">Code Assistance</h3>
-                        <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">Get help with Python, JavaScript, and other programming languages</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-violet-500/10 group">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5 bg-violet-500/20 p-2 rounded-md text-violet-400 group-hover:bg-violet-500/30 transition-colors">
-                        <Brain className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-sm mb-1 group-hover:text-violet-300 transition-colors">Deep Learning Concepts</h3>
-                        <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">Explore machine learning, neural networks, and AI fundamentals</p>
-                      </div>
-                    </div>
-                  </div>
+                    </button>
+                  ))}
                 </div>
                 
-                <div className="flex gap-2 mt-2">
-                  <Button size="sm" variant="outline" className="w-full bg-white/5 border-white/10 hover:bg-white/10 hover:text-white gap-2 text-xs h-8">
-                    <Calculator className="h-3.5 w-3.5" />
-                    <span>Explore Calculators</span>
-                  </Button>
-                  <Button size="sm" variant="outline" className="w-full bg-white/5 border-white/10 hover:bg-white/10 hover:text-white gap-2 text-xs h-8">
-                    <BookOpen className="h-3.5 w-3.5" />
-                    <span>View Tutorials</span>
-                  </Button>
-                </div>
-                
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm" className="w-full bg-white/5 border-white/10 hover:bg-white/10 hover:text-white text-xs">
+                      <Edit className="h-3.5 w-3.5 mr-2" />
+                      <span>Mai multe prompt-uri</span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="bg-background/80 backdrop-blur-lg border-white/10 p-3">
+                    <div className="grid grid-cols-1 gap-2">
+                      {chatPrompts.slice(3).map((prompt) => (
+                        <button 
+                          key={prompt.id}
+                          className="flex items-center gap-2 p-2 hover:bg-white/10 rounded-md transition-all text-left text-sm group"
+                          onClick={() => handlePromptClick(prompt.prompt)}
+                        >
+                          <div className={`p-1.5 rounded-md transition-colors ${prompt.color}`}>
+                            <prompt.icon className="h-3.5 w-3.5" />
+                          </div>
+                          <span className="flex-1">{prompt.title}</span>
+                          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           ) : (
