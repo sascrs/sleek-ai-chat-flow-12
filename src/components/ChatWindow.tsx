@@ -154,48 +154,48 @@ export function ChatWindow() {
       
       <div 
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-custom"
+        className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 scrollbar-custom"
       >
         <div className="chat-container">
           {!currentConversation?.messages.length ? (
-            <div className="flex flex-col items-center justify-center h-full text-center px-4 math-symbols relative">
+            <div className="flex flex-col items-center justify-center h-full text-center px-2 sm:px-4 math-symbols relative">
               {renderMathParticles()}
               
-              <div className="mb-6 animate-float-slow relative">
+              <div className="mb-4 sm:mb-6 animate-float-slow relative">
                 <div className="absolute inset-0 -z-10 bg-gradient-radial from-primary/5 to-transparent rounded-full blur-2xl"></div>
                 <Logo size="lg" animate={true} />
               </div>
               
-              <div className="bg-white/10 backdrop-blur-md border border-white/10 shadow-glass p-8 max-w-md w-full mb-8 relative overflow-hidden">
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 shadow-glass p-4 sm:p-6 lg:p-8 max-w-md w-full mb-6 sm:mb-8 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600"></div>
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
                   <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-1.5 rounded-md">
-                    <Sparkles className="h-4 w-4 text-white" />
+                    <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold font-space-grotesk gradient-text">
+                  <h2 className="text-xl sm:text-2xl font-bold font-space-grotesk gradient-text">
                     PyThaGO.AI
                   </h2>
                 </div>
-                <p className="text-muted-foreground mb-6">
+                <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
                   Asistentul tău premium pentru matematică și programare. Alege unul dintre prompt-urile de mai jos pentru a începe.
                 </p>
                 
-                <div className="grid grid-cols-1 gap-3 mb-6">
+                <div className="grid grid-cols-1 gap-2 sm:gap-3 mb-4 sm:mb-6">
                   {chatPrompts.slice(0, 3).map((prompt) => (
                     <button 
                       key={prompt.id}
-                      className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-4 rounded-xl shadow-soft hover:shadow-premium/10 group text-left"
+                      className="suggestion-card bg-white/5 border border-white/10 hover:bg-white/10 transition-all p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-soft hover:shadow-premium/10 group text-left"
                       onClick={() => handlePromptClick(prompt.prompt)}
                     >
-                      <div className="flex items-start gap-3">
-                        <div className={`mt-0.5 p-2 rounded-md transition-colors ${prompt.color}`}>
-                          <prompt.icon className="h-4 w-4" />
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <div className={`mt-0.5 p-1.5 sm:p-2 rounded-md transition-colors ${prompt.color}`}>
+                          <prompt.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-medium text-sm mb-1 group-hover:text-indigo-300 transition-colors">{prompt.title}</h3>
-                          <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">{prompt.description}</p>
+                          <h3 className="font-medium text-xs sm:text-sm mb-0.5 sm:mb-1 group-hover:text-indigo-300 transition-colors">{prompt.title}</h3>
+                          <p className="text-xs text-muted-foreground group-hover:text-muted-foreground/80 line-clamp-2">{prompt.description}</p>
                         </div>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+                        <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground/50 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
                       </div>
                     </button>
                   ))}
@@ -204,23 +204,23 @@ export function ChatWindow() {
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm" className="w-full bg-white/5 border-white/10 hover:bg-white/10 hover:text-white text-xs">
-                      <Edit className="h-3.5 w-3.5 mr-2" />
+                      <Edit className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1.5 sm:mr-2" />
                       <span>Mai multe prompt-uri</span>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="bg-background/80 backdrop-blur-lg border-white/10 p-3">
-                    <div className="grid grid-cols-1 gap-2">
+                  <PopoverContent className="bg-background/80 backdrop-blur-lg border-white/10 p-2 sm:p-3 w-[280px] sm:w-auto">
+                    <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
                       {chatPrompts.slice(3).map((prompt) => (
                         <button 
                           key={prompt.id}
-                          className="flex items-center gap-2 p-2 hover:bg-white/10 rounded-md transition-all text-left text-sm group"
+                          className="flex items-center gap-2 p-1.5 sm:p-2 hover:bg-white/10 rounded-md transition-all text-left text-xs sm:text-sm group"
                           onClick={() => handlePromptClick(prompt.prompt)}
                         >
-                          <div className={`p-1.5 rounded-md transition-colors ${prompt.color}`}>
-                            <prompt.icon className="h-3.5 w-3.5" />
+                          <div className={`p-1 sm:p-1.5 rounded-md transition-colors ${prompt.color}`}>
+                            <prompt.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                           </div>
                           <span className="flex-1">{prompt.title}</span>
-                          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+                          <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
                         </button>
                       ))}
                     </div>
@@ -230,9 +230,9 @@ export function ChatWindow() {
             </div>
           ) : (
             <div>
-              <div className="mb-5 opacity-90">
-                <div className="py-2 px-4 rounded-full bg-background/80 backdrop-blur-sm border border-border/40 inline-flex items-center gap-2 shadow-sm">
-                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
+              <div className="mb-3 sm:mb-5 opacity-90">
+                <div className="py-1.5 sm:py-2 px-3 sm:px-4 rounded-full bg-background/80 backdrop-blur-sm border border-border/40 inline-flex items-center gap-1.5 sm:gap-2 shadow-sm">
+                  <div className="h-1.5 sm:h-2 w-1.5 sm:w-2 rounded-full bg-green-500"></div>
                   <span className="text-xs font-medium text-foreground/70">New conversation</span>
                 </div>
               </div>
@@ -249,10 +249,10 @@ export function ChatWindow() {
       {/* Scroll to bottom button */}
       {showScrollButton && (
         <Button
-          className="absolute bottom-24 right-6 rounded-full shadow-md h-10 w-10 p-0 bg-primary/90 hover:bg-primary animate-bounce"
+          className="fixed bottom-24 right-4 sm:right-6 rounded-full shadow-md h-8 w-8 sm:h-10 sm:w-10 p-0 bg-primary/90 hover:bg-primary animate-bounce z-10"
           onClick={scrollToBottom}
         >
-          <ChevronDown className="h-5 w-5" />
+          <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
       )}
       

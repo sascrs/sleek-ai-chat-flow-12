@@ -22,7 +22,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         
-        <main className="flex-1 md:ml-64 relative">
+        <main className="flex-1 w-full md:ml-64 relative">
           {children || <ChatWindow />}
         </main>
       </div>
