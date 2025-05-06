@@ -182,12 +182,16 @@
   
   /* Custom scrollbar */
   .scrollbar-custom {
-    @apply scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent;
+    @apply scrollbar-thin;
   }
 }
 
 /* Custom scrollbar styles */
 @layer utilities {
+  .scrollbar-thin {
+    @apply overflow-auto;
+  }
+  
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
   }
@@ -224,3 +228,4 @@
 .bg-premium-gradient-hover {
   background: linear-gradient(90deg, hsla(277, 80%, 82%, 1) 0%, hsla(297, 55%, 49%, 1) 100%);
 }
+
