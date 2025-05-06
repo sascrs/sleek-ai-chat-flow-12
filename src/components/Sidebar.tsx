@@ -101,11 +101,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <Button
                 variant="ghost"
                 className="w-full justify-start rounded-lg"
-                as={Link}
-                to="/"
+                onClick={() => {}}
               >
                 <MessageSquare className="h-4 w-4 mr-2.5" />
-                Chat
+                <Link to="/">Chat</Link>
               </Button>
               <Button
                 variant="ghost"
@@ -128,17 +127,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           
           <div className="mb-4">
             <h4 className="text-xs font-medium mb-2 text-sidebar-foreground/60 px-2">Settings</h4>
-            <Link to="/ai-preferences">
-              <Button
-                variant="ghost"
-                className={`w-full justify-start rounded-lg ${
-                  location.pathname === '/ai-preferences' ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : ''
-                }`}
-              >
-                <Settings className="h-4 w-4 mr-2.5" />
-                AI Preferences
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              className={`w-full justify-start rounded-lg ${
+                location.pathname === '/ai-preferences' ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : ''
+              }`}
+              onClick={() => {}}
+            >
+              <Settings className="h-4 w-4 mr-2.5" />
+              <Link to="/ai-preferences">AI Preferences</Link>
+            </Button>
           </div>
         </ScrollArea>
         
