@@ -141,15 +141,23 @@
 
   /* Message bubbles */
   .message-bubble {
-    @apply rounded-xl py-4 px-5 mb-6 max-w-[92%] md:max-w-[85%] lg:max-w-[75%] shadow-sm animate-fade-in border border-border/30 backdrop-blur-sm;
+    @apply rounded-xl py-4 px-5 mb-6 max-w-[92%] md:max-w-[85%] lg:max-w-[75%] shadow-sm animate-fade-in border border-border/30 backdrop-blur-sm transition-all duration-300;
   }
 
   .ai-message {
-    @apply bg-ai-muted/80 text-ai-muted-foreground;
+    @apply bg-ai-muted/80 text-ai-muted-foreground shadow-lg relative;
+  }
+
+  .ai-message::before {
+    @apply content-[''] absolute -left-1.5 top-4 h-3 w-3 rotate-45 bg-ai-muted/80 border-l border-t border-border/30;
   }
 
   .user-message {
-    @apply bg-user/90 text-user-foreground ml-auto backdrop-blur-sm;
+    @apply bg-gradient-to-br from-user/90 to-user/70 text-user-foreground ml-auto backdrop-blur-sm shadow-md;
+  }
+
+  .user-message::before {
+    @apply content-[''] absolute -right-1.5 top-4 h-3 w-3 rotate-45 bg-user/80 border-r border-t border-border/30;
   }
 
   /* Typing indicator */
@@ -163,7 +171,7 @@
 
   /* Code blocks */
   .code-block {
-    @apply bg-muted/20 text-muted-foreground rounded-md overflow-x-auto my-3 border border-border/40;
+    @apply bg-muted/20 text-muted-foreground rounded-md overflow-x-auto my-3 border border-border/40 shadow-sm;
   }
 
   /* File upload area */
@@ -228,3 +236,18 @@
 .bg-premium-gradient-hover {
   background: linear-gradient(90deg, #8c78e6 0%, #6e5a9b 100%);
 }
+
+/* Message bubble animations and effects */
+.message-bubble {
+  position: relative;
+  transform-origin: center bottom;
+}
+
+.ai-message {
+  box-shadow: 0 4px 20px -5px rgba(124, 58, 237, 0.1);
+}
+
+.user-message {
+  box-shadow: 0 4px 20px -5px rgba(59, 130, 246, 0.1);
+}
+

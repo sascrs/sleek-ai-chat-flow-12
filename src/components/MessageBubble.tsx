@@ -62,7 +62,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                     if (!isInline) {
                       return (
                         <div className="code-block relative group rounded-lg overflow-hidden border border-border/50">
-                          <div className="bg-muted/50 px-4 py-2 text-xs font-mono text-muted-foreground border-b border-border/50 flex items-center">
+                          <div className="bg-muted/80 backdrop-blur-sm px-4 py-2 text-xs font-mono text-muted-foreground border-b border-border/50 flex items-center">
                             <span className="flex-1">{match ? match[1] : 'code'}</span>
                             <Button
                               variant="ghost"
@@ -73,7 +73,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                               <Copy className="h-3.5 w-3.5" />
                             </Button>
                           </div>
-                          <pre className="text-sm p-4 m-0 overflow-x-auto bg-muted/20">
+                          <pre className="text-sm p-4 m-0 overflow-x-auto bg-muted/30 backdrop-blur-sm">
                             <code className={match ? `language-${match[1]}` : ''} {...props}>
                               {children}
                             </code>
@@ -82,7 +82,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                       );
                     }
                     return (
-                      <code className="bg-muted px-1.5 py-0.5 rounded-md text-sm font-mono" {...props}>
+                      <code className="bg-muted/80 backdrop-blur-sm px-1.5 py-0.5 rounded-md text-sm font-mono" {...props}>
                         {children}
                       </code>
                     );
@@ -119,24 +119,24 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           )}
           
           {message.type === 'ai' && !message.isProcessing && (
-            <div className="flex items-center mt-4 space-x-2">
-              <Button variant="outline" size="sm" onClick={handleCopy} className="h-8 text-xs font-medium">
+            <div className="flex flex-wrap items-center mt-4 gap-2">
+              <Button variant="outline" size="sm" onClick={handleCopy} className="h-8 text-xs font-medium bg-background/80 backdrop-blur-sm border-border/60 hover:bg-accent/50">
                 {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
                 {copied ? 'Copied' : 'Copy'}
               </Button>
               
-              <Button variant="outline" size="sm" className="h-8 text-xs font-medium">
+              <Button variant="outline" size="sm" className="h-8 text-xs font-medium bg-background/80 backdrop-blur-sm border-border/60 hover:bg-accent/50">
                 <Calculator className="h-3.5 w-3.5 mr-1.5" />
                 Compute
               </Button>
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="h-8">
+                  <Button variant="outline" size="sm" className="h-8 bg-background/80 backdrop-blur-sm border-border/60 hover:bg-accent/50">
                     <MoreHorizontal className="h-3.5 w-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-48 bg-background/90 backdrop-blur-md border-border/60">
                   <DropdownMenuItem>Show step by step</DropdownMenuItem>
                   <DropdownMenuItem>Generate code</DropdownMenuItem>
                   <DropdownMenuItem>Explain differently</DropdownMenuItem>
