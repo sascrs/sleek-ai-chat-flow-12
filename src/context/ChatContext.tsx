@@ -18,7 +18,7 @@ interface ChatContextType {
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
-// The API key for the AI service
+// The API key for the Groq AI service
 const API_KEY = "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";
 
 export function ChatProvider({ children }: { children: ReactNode }) {
@@ -275,12 +275,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   };
 
   const stopGenerating = () => {
-    if (!isProcessing || !currentConversation) return;
-    
-    if (abortController) {
-      abortController.abort();
-    }
-    
+    if (!isProcessing || !abortController) return;
+    abortController.abort();
     setIsProcessing(false);
   };
 

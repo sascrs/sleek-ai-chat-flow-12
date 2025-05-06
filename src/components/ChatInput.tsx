@@ -1,12 +1,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Paperclip, StopCircle, RefreshCw, Trash2, Sparkles } from 'lucide-react';
+import { Send, Paperclip, StopCircle, RefreshCw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { FileUpload } from './FileUpload';
 import { Attachment } from '@/types';
 import { useChat } from '@/hooks/useChat';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { toast } from 'sonner';
 
 export function ChatInput() {
   const [message, setMessage] = useState('');
@@ -30,16 +31,21 @@ export function ChatInput() {
     }
   }, [message]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim() && attachments.length === 0) return;
     
-    sendMessage(message, attachments.length > 0 ? attachments : undefined);
-    setMessage('');
-    setAttachments([]);
-    
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+    try {
+      await sendMessage(message, attachments.length > 0 ? attachments : undefined);
+      setMessage('');
+      setAttachments([]);
+      
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error('Failed to send message. Please try again.');
     }
   };
 
