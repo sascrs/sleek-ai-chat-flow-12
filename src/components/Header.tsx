@@ -20,46 +20,48 @@ interface HeaderProps {
 
 export function Header({ toggleSidebar }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-10 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-14 items-center justify-between px-4">
         <div className="flex items-center">
           <Button 
             variant="ghost" 
             size="icon" 
-            className="mr-2 md:hidden" 
+            className="mr-2 md:hidden rounded-full" 
             onClick={toggleSidebar}
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle sidebar</span>
           </Button>
           <div className="flex items-center">
-            <Sparkles className="h-6 w-6 text-primary mr-2" />
-            <span className="text-lg font-medium tracking-tight">SleekAI</span>
+            <div className="bg-gradient-to-r from-primary to-primary/70 rounded-full p-1.5 mr-2.5">
+              <Sparkles className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">SleekAI</span>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <UpgradeButton className="hidden md:flex" />
           <ThemeToggle />
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 p-0">
+                <Avatar className="h-9 w-9 ring-2 ring-border">
                   <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>SC</AvatarFallback>
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">SC</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-56" sideOffset={8}>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
+                <Settings className="mr-2.5 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Sparkles className="mr-2 h-4 w-4" />
+                <Sparkles className="mr-2.5 h-4 w-4" />
                 <span>Upgrade to Pro</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

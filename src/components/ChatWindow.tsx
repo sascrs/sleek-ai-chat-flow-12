@@ -14,15 +14,15 @@ export function ChatWindow() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-custom">
         <div className="chat-container">
           {!currentConversation?.messages.length ? (
             <div className="flex flex-col items-center justify-center h-full text-center px-4">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <span className="text-2xl">✨</span>
+              <div className="w-20 h-20 rounded-full bg-primary/10 backdrop-blur-md flex items-center justify-center mb-6 border border-primary/20 shadow-lg shadow-primary/5">
+                <span className="text-3xl">✨</span>
               </div>
-              <h2 className="text-2xl font-bold mb-2">Welcome to SleekAI</h2>
-              <p className="text-muted-foreground mb-6 max-w-md">
+              <h2 className="text-2xl font-bold mb-3 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Welcome to SleekAI</h2>
+              <p className="text-muted-foreground mb-8 max-w-md">
                 Experience a premium chat interface with advanced AI capabilities. 
                 Ask anything to get started.
               </p>
@@ -35,7 +35,7 @@ export function ChatWindow() {
                 ].map((suggestion, i) => (
                   <button
                     key={i}
-                    className="text-sm bg-muted hover:bg-muted/80 transition-colors p-3 rounded-lg text-left"
+                    className="text-sm bg-background hover:bg-accent transition-colors p-3.5 rounded-lg text-left border border-border/40 shadow-sm"
                     onClick={() => {
                       const textarea = document.querySelector('textarea');
                       if (textarea) {

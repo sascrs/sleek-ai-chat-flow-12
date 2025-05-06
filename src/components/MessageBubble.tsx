@@ -34,17 +34,17 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       </div>
     );
   };
-
+  
   // CSS classes based on message type
   const bubbleClass = message.type === 'ai' ? 'ai-message' : 'user-message';
   
   return (
     <div className={`message-bubble ${bubbleClass}`}>
-      <div className="flex items-start">
+      <div className="flex items-start gap-3">
         {message.type === 'ai' && (
-          <Avatar className="h-8 w-8 mr-3 mt-1">
+          <Avatar className="h-8 w-8 ring-2 ring-primary/10 mt-1">
             <AvatarImage src="/placeholder.svg" />
-            <AvatarFallback><Sparkles className="h-4 w-4" /></AvatarFallback>
+            <AvatarFallback className="bg-gradient-to-br from-ai to-ai/50"><Sparkles className="h-4 w-4 text-white" /></AvatarFallback>
           </Avatar>
         )}
         
@@ -61,25 +61,28 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                     
                     if (!isInline) {
                       return (
-                        <div className="code-block relative group">
-                          <pre className="text-sm p-0 m-0 bg-transparent overflow-x-auto">
+                        <div className="code-block relative group rounded-lg overflow-hidden border border-border/50">
+                          <div className="bg-muted/50 px-4 py-2 text-xs font-mono text-muted-foreground border-b border-border/50 flex items-center">
+                            <span className="flex-1">{match ? match[1] : 'code'}</span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 opacity-70 hover:opacity-100 transition-opacity"
+                              onClick={() => navigator.clipboard.writeText(String(children))}
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                          <pre className="text-sm p-4 m-0 overflow-x-auto bg-muted/20">
                             <code className={match ? `language-${match[1]}` : ''} {...props}>
                               {children}
                             </code>
                           </pre>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => navigator.clipboard.writeText(String(children))}
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </Button>
                         </div>
                       );
                     }
                     return (
-                      <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props}>
+                      <code className="bg-muted px-1.5 py-0.5 rounded-md text-sm font-mono" {...props}>
                         {children}
                       </code>
                     );
@@ -92,48 +95,48 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           )}
           
           {message.attachments && message.attachments.length > 0 && (
-            <div className="mt-2 space-y-1">
+            <div className="mt-3 space-y-2">
               {message.attachments.map((attachment) => (
                 <div 
                   key={attachment.id}
-                  className="flex items-center bg-muted p-2 rounded text-sm"
+                  className="flex items-center bg-background/80 backdrop-blur-sm border border-border/40 p-2.5 rounded-lg text-sm"
                 >
                   {attachment.type.startsWith('image/') ? (
                     <img
                       src={attachment.url}
                       alt={attachment.name}
-                      className="h-10 w-10 object-cover rounded mr-2"
+                      className="h-12 w-12 object-cover rounded-md mr-3"
                     />
                   ) : (
-                    <div className="h-10 w-10 bg-primary/10 rounded flex items-center justify-center mr-2">
-                      <span className="text-xs">{attachment.name.split('.').pop()}</span>
+                    <div className="h-12 w-12 bg-primary/10 rounded-md flex items-center justify-center mr-3 text-primary">
+                      <span className="text-xs uppercase font-semibold">{attachment.name.split('.').pop()}</span>
                     </div>
                   )}
-                  <span className="truncate flex-1">{attachment.name}</span>
+                  <span className="truncate flex-1 font-medium">{attachment.name}</span>
                 </div>
               ))}
             </div>
           )}
           
           {message.type === 'ai' && !message.isProcessing && (
-            <div className="flex items-center mt-3 space-x-2">
-              <Button variant="ghost" size="sm" onClick={handleCopy}>
-                {copied ? <Check className="h-3.5 w-3.5 mr-1" /> : <Copy className="h-3.5 w-3.5 mr-1" />}
+            <div className="flex items-center mt-4 space-x-2">
+              <Button variant="outline" size="sm" onClick={handleCopy} className="h-8 text-xs font-medium">
+                {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
                 {copied ? 'Copied' : 'Copy'}
               </Button>
               
-              <Button variant="ghost" size="sm">
-                <Sparkles className="h-3.5 w-3.5 mr-1" />
+              <Button variant="outline" size="sm" className="h-8 text-xs font-medium">
+                <Sparkles className="h-3.5 w-3.5 mr-1.5" />
                 Enhance
               </Button>
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="outline" size="sm" className="h-8">
                     <MoreHorizontal className="h-3.5 w-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem>Explain simply</DropdownMenuItem>
                   <DropdownMenuItem>Make longer</DropdownMenuItem>
                   <DropdownMenuItem>Make shorter</DropdownMenuItem>
@@ -144,9 +147,9 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         </div>
         
         {message.type === 'user' && (
-          <Avatar className="h-8 w-8 ml-3 mt-1">
+          <Avatar className="h-8 w-8 ring-2 ring-primary/10 mt-1">
             <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarFallback className="bg-gradient-to-br from-user to-user/70 text-white">U</AvatarFallback>
           </Avatar>
         )}
       </div>
