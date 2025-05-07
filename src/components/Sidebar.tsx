@@ -11,7 +11,8 @@ import {
   Crown,
   Search,
   Archive,
-  Code
+  Code,
+  LayoutDashboard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -216,20 +217,37 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           
           <div className="mb-4">
             <h4 className="text-xs font-medium mb-2 text-sidebar-foreground/60 px-2">Settings</h4>
-            <Button
-              variant="ghost"
-              className={`w-full justify-start rounded-lg ${
-                location.pathname === '/ai-preferences' ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-inner' : ''
-              }`}
-              onClick={() => {
-                if (window.innerWidth < 768) {
-                  onClose();
-                }
-              }}
-            >
-              <Settings className="h-4 w-4 mr-2.5" />
-              <Link to="/ai-preferences" className="flex-1 text-left">AI Preferences</Link>
-            </Button>
+            <div className="space-y-1">
+              <Button
+                variant="ghost"
+                className={`w-full justify-start rounded-lg ${
+                  location.pathname === '/ai-preferences' ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-inner' : ''
+                }`}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    onClose();
+                  }
+                }}
+              >
+                <Settings className="h-4 w-4 mr-2.5" />
+                <Link to="/ai-preferences" className="flex-1 text-left">AI Preferences</Link>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                className={`w-full justify-start rounded-lg ${
+                  location.pathname === '/mcp' ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-inner' : ''
+                }`}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    onClose();
+                  }
+                }}
+              >
+                <LayoutDashboard className="h-4 w-4 mr-2.5" />
+                <Link to="/mcp" className="flex-1 text-left">MCP</Link>
+              </Button>
+            </div>
           </div>
         </ScrollArea>
         
