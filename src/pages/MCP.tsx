@@ -32,20 +32,20 @@ const MCP = () => {
           
           <Tabs defaultValue="dashboard" className="w-full">
             <div className="overflow-x-auto pb-1">
-              <TabsList className="mb-4 bg-background/40 p-0.5 h-auto">
-                <TabsTrigger value="dashboard" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5">
+              <TabsList className="mb-4 bg-background/40 p-0.5 h-auto flex flex-wrap">
+                <TabsTrigger value="dashboard" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
                   <LayoutDashboard className="h-4 w-4 mr-1.5" />
                   <span>Dashboard</span>
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5">
+                <TabsTrigger value="analytics" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
                   <LineChart className="h-4 w-4 mr-1.5" />
                   <span>Analiză</span>
                 </TabsTrigger>
-                <TabsTrigger value="users" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5">
+                <TabsTrigger value="users" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
                   <Users className="h-4 w-4 mr-1.5" />
                   <span>Utilizatori</span>
                 </TabsTrigger>
-                <TabsTrigger value="settings" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5">
+                <TabsTrigger value="settings" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
                   <Settings className="h-4 w-4 mr-1.5" />
                   <span>Setări</span>
                 </TabsTrigger>
