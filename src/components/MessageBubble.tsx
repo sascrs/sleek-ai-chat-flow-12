@@ -44,6 +44,35 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     toast.success(`Thank you for your ${type === 'like' ? 'positive' : 'negative'} feedback!`);
   };
   
+  // Handle compute action
+  const handleCompute = () => {
+    toast.success('Computing result...');
+    // Here you would add actual computation logic if needed
+  };
+  
+  // Handle code generation action
+  const handleGenerateCode = () => {
+    toast.success('Generating code...');
+    // Here you would add actual code generation logic if needed
+  };
+  
+  // Handle dropdown menu actions
+  const handleDropdownAction = (action: string) => {
+    switch(action) {
+      case 'step-by-step':
+        toast.success('Showing step by step explanation');
+        break;
+      case 'explain-differently':
+        toast.success('Generating alternative explanation');
+        break;
+      case 'share':
+        toast.success('Preparing to share response');
+        break;
+      default:
+        break;
+    }
+  };
+  
   // CSS classes based on message type
   const bubbleClass = message.type === 'ai' ? 'ai-message' : 'user-message';
   
@@ -191,6 +220,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 variant="outline" 
                 size="sm" 
                 className="h-8 text-xs font-medium bg-background/80 backdrop-blur-md border-border/60 hover:bg-accent/50 hover:border-primary/50 shadow-sm transition-all btn-3d"
+                onClick={handleCompute}
               >
                 <Calculator className="h-3.5 w-3.5 mr-1.5" />
                 <span>Compute</span>
@@ -200,6 +230,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 variant="outline" 
                 size="sm" 
                 className="h-8 text-xs font-medium bg-background/80 backdrop-blur-md border-border/60 hover:bg-accent/50 hover:border-primary/50 shadow-sm transition-all btn-3d"
+                onClick={handleGenerateCode}
               >
                 <Code className="h-3.5 w-3.5 mr-1.5" />
                 <span>Generate Code</span>
@@ -219,15 +250,24 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                   align="end" 
                   className="w-48 bg-background/95 backdrop-blur-lg border-border/60 shadow-lg animate-scale-up"
                 >
-                  <DropdownMenuItem className="flex items-center gap-2">
+                  <DropdownMenuItem 
+                    className="flex items-center gap-2"
+                    onClick={() => handleDropdownAction('step-by-step')}
+                  >
                     <BookOpen className="h-3.5 w-3.5" />
                     <span>Show step by step</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="flex items-center gap-2">
+                  <DropdownMenuItem 
+                    className="flex items-center gap-2"
+                    onClick={() => handleDropdownAction('explain-differently')}
+                  >
                     <Lightbulb className="h-3.5 w-3.5" />
                     <span>Explain differently</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="flex items-center gap-2">
+                  <DropdownMenuItem 
+                    className="flex items-center gap-2"
+                    onClick={() => handleDropdownAction('share')}
+                  >
                     <ArrowUpRight className="h-3.5 w-3.5" />
                     <span>Share response</span>
                   </DropdownMenuItem>
