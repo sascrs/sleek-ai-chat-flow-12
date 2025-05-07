@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
@@ -168,14 +167,9 @@ export function ChatWindow() {
               
               <div className="bg-white/10 backdrop-blur-md border border-white/10 shadow-glass p-4 sm:p-6 lg:p-8 max-w-md w-full mb-6 sm:mb-8 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600"></div>
-                <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                  <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-1.5 rounded-md">
-                    <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-bold font-space-grotesk gradient-text">
-                    PyThaGO.AI
-                  </h2>
-                </div>
+                <h2 className="text-xl sm:text-2xl font-bold font-space-grotesk gradient-text mb-3 sm:mb-4">
+                  PyThaGO.AI
+                </h2>
                 <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
                   Asistentul tău premium pentru matematică și programare. Alege unul dintre prompt-urile de mai jos pentru a începe.
                 </p>
