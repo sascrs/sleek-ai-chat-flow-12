@@ -23,7 +23,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   
   // Map of provider IDs to more descriptive model names
   const modelNameMap: Record<string, string> = {
-    'llama': 'Llama 3 70B',
+    'llama': 'Llama 70 B',
     'openai': 'GPT-4 Turbo',
     'groq': 'Groq LLM',
     'deepseek': 'DeepSeek Coder'
