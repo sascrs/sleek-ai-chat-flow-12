@@ -1,4 +1,3 @@
-
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
@@ -10,6 +9,10 @@ export default {
       fontFamily: {
         sans: ["Inter", ...fontFamily.sans],
         "space-grotesk": ["Space Grotesk", ...fontFamily.sans],
+      },
+      boxShadow: {
+        soft: "0 2px 10px rgba(0, 0, 0, 0.08)",
+        glass: "0 8px 32px rgba(0, 0, 0, 0.05)",
       },
       colors: {
         border: "hsl(var(--border))",

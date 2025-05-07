@@ -141,6 +141,15 @@
 }
 
 @layer components {
+  /* Shadow utilities */
+  .shadow-soft {
+    @apply shadow-[0_2px_10px_rgba(0,0,0,0.08)];
+  }
+  
+  .shadow-glass {
+    @apply shadow-[0_8px_32px_rgba(0,0,0,0.05)];
+  }
+
   /* Premium Button Style */
   .premium-button {
     @apply bg-premium text-premium-foreground shadow-premium transition-all duration-300 hover:shadow-lg hover:shadow-premium/20 font-semibold relative overflow-hidden;
