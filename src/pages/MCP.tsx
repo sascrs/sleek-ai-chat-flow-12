@@ -174,8 +174,9 @@ const MCP = () => {
 
   return (
     <ChatLayout>
-      <div className="min-h-screen bg-[#111827] text-white">
-        <div className="container mx-auto max-w-7xl p-4 md:p-6 space-y-6">
+      {/* Fixed main container to prevent sidebar overlap and fix height issues */}
+      <div className="w-full bg-[#111827] text-white flex-1 min-h-0">
+        <div className="container mx-auto max-w-7xl p-4 md:p-6 space-y-6 pb-16">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">MCP Servers</h1>
             <p className="text-gray-400 max-w-3xl">
