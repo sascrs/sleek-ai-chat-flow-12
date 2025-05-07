@@ -144,7 +144,7 @@ const MCP = () => {
   
   return (
     <ChatLayout>
-      <div className="min-h-screen bg-[#111827] text-white p-6 md:p-8 overflow-auto w-full">
+      <div className="min-h-screen bg-[#111827] text-white p-6 md:p-8 overflow-auto">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 md:mb-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">MCP Servers</h1>
@@ -181,7 +181,7 @@ const MCP = () => {
           
           {/* Categories */}
           <div className="flex overflow-x-auto pb-2 mb-6 hide-scrollbar">
-            <div className="flex flex-wrap gap-1">
+            <div className="flex gap-1">
               {categories.map(category => (
                 <button
                   key={category.id}
