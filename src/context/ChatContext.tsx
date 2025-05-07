@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { Message, Conversation, Attachment } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,6 +14,7 @@ interface ChatContextType {
   regenerateLastResponse: () => Promise<void>;
   stopGenerating: () => void;
   clearChat: () => void;
+  deleteConversation: (conversationId: string) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -326,6 +326,22 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const deleteConversation = (conversationId: string) => {
+    // Remove the conversation from the state
+    setConversations((prev) => prev.filter((conv) => conv.id !== conversationId));
+    
+    // If the deleted conversation was the current one, set currentConversation to null or another conversation
+    if (currentConversation?.id === conversationId) {
+      const remainingConversations = conversations.filter(conv => conv.id !== conversationId);
+      if (remainingConversations.length > 0) {
+        setCurrentConversation(remainingConversations[0]);
+      } else {
+        // If there are no conversations left, start a new one
+        startNewConversation();
+      }
+    }
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -338,6 +354,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         regenerateLastResponse,
         stopGenerating,
         clearChat,
+        deleteConversation,
       }}
     >
       {children}
