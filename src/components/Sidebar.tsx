@@ -12,7 +12,8 @@ import {
   Search,
   Archive,
   Code,
-  LayoutDashboard
+  LayoutDashboard,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -21,6 +22,7 @@ import { useChat } from '@/hooks/useChat';
 import { Logo } from './Logo';
 import { Link, useLocation } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -28,7 +30,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { conversations, startNewConversation, currentConversation, setCurrentConversation } = useChat();
+  const { conversations, startNewConversation, currentConversation, setCurrentConversation, deleteConversation } = useChat();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -37,6 +39,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     if (window.innerWidth < 768) {
       onClose();
     }
+  };
+  
+  const handleDeleteConversation = (e: React.MouseEvent, conversationId: string) => {
+    e.stopPropagation();
+    deleteConversation(conversationId);
+    toast.success("Conversație ștearsă");
   };
   
   const filteredConversations = searchQuery 
@@ -106,7 +114,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   <Button
                     key={conv.id}
                     variant="ghost"
-                    className={`w-full justify-start text-left truncate rounded-lg group ${
+                    className={`w-full justify-start text-left truncate rounded-lg group relative ${
                       currentConversation?.id === conv.id ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-inner' : 'hover:bg-sidebar-accent/70'
                     }`}
                     onClick={() => {
@@ -124,8 +132,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         ? 'New Chat' 
                         : conv.title}
                     </span>
+                    
+                    <button
+                      onClick={(e) => handleDeleteConversation(e, conv.id)}
+                      className="absolute right-2 opacity-0 group-hover:opacity-100 transition-opacity h-5 w-5 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center"
+                      aria-label="Delete conversation"
+                    >
+                      <X className="h-3 w-3 text-white" />
+                    </button>
+                    
                     {currentConversation?.id === conv.id && (
-                      <span className="ml-auto">
+                      <span className="ml-auto mr-7">
                         <Star className="h-3 w-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                       </span>
                     )}
