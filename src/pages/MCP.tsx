@@ -1,190 +1,261 @@
 
 import React from 'react';
 import { ChatLayout } from '@/components/ChatLayout';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  LayoutDashboard, 
-  LineChart, 
-  Users, 
-  Settings, 
-  Database, 
-  Code,
-  FileText,
-  Share2
-} from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+// Card type definition
+type ServerCard = {
+  id: string;
+  name: string;
+  description: string;
+  type: 'framework' | 'reference' | 'third-party' | 'community';
+  tags: string[];
+  rating: number;
+  extraTags?: string[];
+};
+
+// Server cards data
+const serverCards: ServerCard[] = [
+  {
+    id: 'fastmcp',
+    name: 'FastMCP',
+    description: 'A TypeScript framework for building MCP servers quickly and efficiently.',
+    type: 'framework',
+    tags: ['Framework', 'TypeScript', 'Development'],
+    rating: 4.9,
+    extraTags: ['+1 more']
+  },
+  {
+    id: 'everart',
+    name: 'EverArt',
+    description: 'AI image generation using various models',
+    type: 'reference',
+    tags: ['AI', 'Image Generation', 'Models'],
+    rating: 4.8
+  },
+  {
+    id: 'apify',
+    name: 'Apify',
+    description: 'Actors MCP Server: Use 3,000+ pre-built cloud tools to extract data from websites, e-commerce, social media...',
+    type: 'third-party',
+    tags: ['Data Extraction', 'Web Scraping', 'Automation'],
+    rating: 4.8,
+    extraTags: ['+1 more']
+  },
+  {
+    id: 'aws-kb',
+    name: 'AWS KB Retrieval',
+    description: 'Retrieval from AWS Knowledge Base using Bedrock Agent Runtime',
+    type: 'reference',
+    tags: ['AWS', 'AI', 'Knowledge Base'],
+    rating: 4.7,
+    extraTags: ['+1 more']
+  },
+  {
+    id: 'everything',
+    name: 'Everything',
+    description: 'Reference / test server with prompts, resources, and tools',
+    type: 'reference',
+    tags: ['Testing', 'Tools', 'Prompts'],
+    rating: 4.6,
+    extraTags: ['+1 more']
+  },
+  {
+    id: '21st-dev',
+    name: '21st.dev Magic',
+    description: 'Create crafted UI components inspired by the best 21st.dev design engineers.',
+    type: 'third-party',
+    tags: ['UI', 'Design', 'Components'],
+    rating: 4.6,
+    extraTags: ['+1 more']
+  },
+  {
+    id: 'brave-search',
+    name: 'Brave Search',
+    description: 'Web and local search using Brave\'s Search API',
+    type: 'reference',
+    tags: ['Search', 'Web', 'API'],
+    rating: 4.5
+  },
+  {
+    id: 'fetch',
+    name: 'Fetch',
+    description: 'Web content fetching and conversion for efficient LLM usage',
+    type: 'reference',
+    tags: ['Web', 'Content', 'Fetching'],
+    rating: 4.5,
+    extraTags: ['+1 more']
+  },
+  {
+    id: 'browser-use',
+    name: 'browser-use',
+    description: 'browser-use MCP server with dockerized playwright + chromium + vnc. supports stdio & resumable http.',
+    type: 'community',
+    tags: ['Browser', 'Automation', 'Docker'],
+    rating: 4.3,
+    extraTags: ['+1 more']
+  },
+  {
+    id: 'discord-bot',
+    name: 'Discord Bot',
+    description: 'A MCP server to connect to Discord guilds through a bot and read and write messages in channels',
+    type: 'community',
+    tags: ['Discord', 'Bot', 'Communication'],
+    rating: 4.2,
+    extraTags: ['+1 more']
+  }
+];
+
+// Tab categories
+const categories = [
+  { id: 'all', name: 'All Servers' },
+  { id: 'reference', name: 'Reference Servers' },
+  { id: 'third-party', name: 'Third-Party Servers' },
+  { id: 'community', name: 'Community Servers' },
+  { id: 'frameworks', name: 'Frameworks' },
+  { id: 'resources', name: 'Resources' }
+];
 
 const MCP = () => {
+  const [activeCategory, setActiveCategory] = React.useState('all');
+  
+  const filteredCards = React.useMemo(() => {
+    if (activeCategory === 'all') return serverCards;
+    if (activeCategory === 'frameworks') return serverCards.filter(card => card.type === 'framework');
+    if (activeCategory === 'resources') return serverCards;
+    return serverCards.filter(card => card.type === activeCategory);
+  }, [activeCategory]);
+  
+  const getCardClassName = (type: string) => {
+    const baseClasses = "absolute right-0 top-0 rounded-bl-md rounded-tr-md text-xs font-medium px-2 py-1 text-white";
+    
+    switch(type) {
+      case 'framework':
+        return cn(baseClasses, "bg-gradient-to-r from-indigo-500 to-purple-500");
+      case 'reference':
+        return cn(baseClasses, "bg-gradient-to-r from-blue-500 to-indigo-500");
+      case 'third-party':
+        return cn(baseClasses, "bg-gradient-to-r from-rose-500 to-purple-500");
+      case 'community':
+        return cn(baseClasses, "bg-gradient-to-r from-blue-500 to-teal-400");
+      default:
+        return cn(baseClasses, "bg-gradient-to-r from-gray-500 to-slate-700");
+    }
+  };
+  
   return (
     <ChatLayout>
-      <div className="container px-4 py-6 md:py-10 max-w-full">
-        <div className="flex flex-col w-full">
-          <div className="mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold font-space-grotesk">Master Control Panel</h1>
-            <p className="text-muted-foreground mt-1">Gestionați aplicația și monitorizați performanța</p>
+      <div className="min-h-screen bg-[#111827] text-white p-8 overflow-auto">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold mb-2">MCP Servers</h1>
+            <p className="text-gray-400 max-w-3xl">
+              Explore the Model Context Protocol (MCP) server ecosystem. Browse reference
+              implementations, third-party integrations, community servers, and frameworks for building AI-
+              powered applications.
+            </p>
           </div>
           
-          <Tabs defaultValue="dashboard" className="w-full">
-            <div className="overflow-x-auto pb-1">
-              <TabsList className="mb-4 bg-background/40 p-0.5 h-auto flex flex-wrap">
-                <TabsTrigger value="dashboard" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
-                  <LayoutDashboard className="h-4 w-4 mr-1.5" />
-                  <span>Dashboard</span>
-                </TabsTrigger>
-                <TabsTrigger value="analytics" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
-                  <LineChart className="h-4 w-4 mr-1.5" />
-                  <span>Analiză</span>
-                </TabsTrigger>
-                <TabsTrigger value="users" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
-                  <Users className="h-4 w-4 mr-1.5" />
-                  <span>Utilizatori</span>
-                </TabsTrigger>
-                <TabsTrigger value="settings" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md py-1.5 px-2.5 m-0.5">
-                  <Settings className="h-4 w-4 mr-1.5" />
-                  <span>Setări</span>
-                </TabsTrigger>
-              </TabsList>
+          {/* Search and Filters */}
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                type="text"
+                placeholder="Search MCP servers..."
+                className="w-full bg-[#1c2536] border border-gray-700 rounded-md py-2 pl-10 pr-3 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              />
             </div>
-            
-            <TabsContent value="dashboard" className="mt-0 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Card className="overflow-hidden shadow-sm border-border/60 bg-card/90 backdrop-blur-sm">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center">
-                      <Users className="h-4 w-4 mr-2 text-indigo-500" />
-                      Utilizatori activi
-                    </CardTitle>
-                    <CardDescription>Ultimele 30 de zile</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-2xl font-bold">2,348</p>
-                    <p className="text-sm text-green-500 flex items-center mt-1">
-                      +12.3% față de luna trecută
-                    </p>
-                  </CardContent>
-                </Card>
+            <div className="flex gap-3">
+              <button className="bg-[#1c2536] border border-gray-700 rounded-md px-4 py-2 flex items-center gap-2 text-sm">
+                <span>Highest Rated</span>
+                <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L6 6L11 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button className="bg-[#1c2536] border border-gray-700 rounded-md px-4 py-2 flex items-center gap-2 text-sm">
+                <SlidersHorizontal size={16} />
+                <span>Filters</span>
+              </button>
+            </div>
+          </div>
+          
+          {/* Categories */}
+          <div className="flex overflow-x-auto pb-2 mb-8 hide-scrollbar">
+            <div className="flex gap-1">
+              {categories.map(category => (
+                <button
+                  key={category.id}
+                  className={`px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium ${
+                    activeCategory === category.id
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-[#1c2536] text-gray-300 hover:bg-gray-700'
+                  }`}
+                  onClick={() => setActiveCategory(category.id)}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Server Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCards.map(card => (
+              <div 
+                key={card.id} 
+                className="bg-gradient-to-b from-[#1a2235] to-[#131c2e] rounded-lg overflow-hidden border border-gray-800 relative"
+              >
+                {/* Type badge */}
+                <div className={getCardClassName(card.type)}>
+                  {card.type}
+                </div>
                 
-                <Card className="overflow-hidden shadow-sm border-border/60 bg-card/90 backdrop-blur-sm">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center">
-                      <Database className="h-4 w-4 mr-2 text-violet-500" />
-                      Spațiu de stocare
-                    </CardTitle>
-                    <CardDescription>Utilizat / Total</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-2xl font-bold">4.8 GB / 10 GB</p>
-                    <p className="text-sm text-amber-500 flex items-center mt-1">
-                      48% utilizat
-                    </p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="overflow-hidden shadow-sm border-border/60 bg-card/90 backdrop-blur-sm">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center">
-                      <Code className="h-4 w-4 mr-2 text-blue-500" />
-                      Operațiuni API
-                    </CardTitle>
-                    <CardDescription>Ultimele 24 de ore</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-2xl font-bold">42,891</p>
-                    <p className="text-sm text-green-500 flex items-center mt-1">
-                      99.8% rata de succes
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <Card className="col-span-1 lg:col-span-2 overflow-hidden shadow-sm border-border/60 bg-card/90 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-base flex items-center">
-                      <LineChart className="h-4 w-4 mr-2 text-primary" />
-                      Performanță săptămânală
-                    </CardTitle>
-                    <CardDescription>Metrici cheie de performanță</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[200px] flex items-center justify-center bg-muted/30 rounded-md">
-                      <p className="text-muted-foreground">Graficele vor fi afișate aici</p>
+                {/* Card content */}
+                <div className="p-5">
+                  <h3 className="text-xl font-bold mb-3">{card.name}</h3>
+                  <p className="text-gray-400 text-sm mb-6 h-12 line-clamp-2">{card.description}</p>
+                  
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {card.tags.map((tag, index) => (
+                      <span 
+                        key={`${card.id}-tag-${index}`}
+                        className="bg-[#252e3f] text-gray-300 text-xs px-3 py-1 rounded-md"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {card.extraTags?.map((tag, index) => (
+                      <span 
+                        key={`${card.id}-extratag-${index}`}
+                        className="bg-[#252e3f] text-gray-400 text-xs px-3 py-1 rounded-md"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Rating and Details */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span className="ml-1 text-sm font-bold text-amber-400">{card.rating.toFixed(1)}</span>
                     </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="col-span-1 overflow-hidden shadow-sm border-border/60 bg-card/90 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-base flex items-center">
-                      <FileText className="h-4 w-4 mr-2 text-violet-500" />
-                      Activitate recentă
-                    </CardTitle>
-                    <CardDescription>Ultimele operațiuni</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {Array.from({length: 4}).map((_, i) => (
-                        <div key={i} className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0">
-                          <div className="flex items-center">
-                            <div className="w-7 h-7 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mr-2.5">
-                              <Share2 className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Export date</p>
-                              <p className="text-xs text-muted-foreground">Acum {15 + i} min</p>
-                            </div>
-                          </div>
-                          <div className="px-1.5 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-xs">Succes</div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                    <button className="text-indigo-400 hover:text-indigo-300 text-sm font-medium flex items-center gap-1">
+                      Details
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={card.id === 'fastmcp' || card.id === 'browser-use' || card.id === 'discord-bot' ? 'rotate-180' : ''}>
+                        <path d="M9 5L16 12L9 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="analytics">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Analiză</CardTitle>
-                  <CardDescription>Vizualizați statisticile detaliate ale aplicației.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>Conținutul pentru pagina de analiză va fi implementat ulterior.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="users">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Utilizatori</CardTitle>
-                  <CardDescription>Gestionați utilizatorii și permisiunile acestora.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>Conținutul pentru pagina de utilizatori va fi implementat ulterior.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="settings">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Setări</CardTitle>
-                  <CardDescription>Configurați preferințele aplicației.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>Conținutul pentru pagina de setări va fi implementat ulterior.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            ))}
+          </div>
         </div>
       </div>
     </ChatLayout>
