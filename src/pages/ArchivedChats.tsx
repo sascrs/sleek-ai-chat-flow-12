@@ -2,149 +2,120 @@
 import React from 'react';
 import { ChatLayout } from '@/components/ChatLayout';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
-import { 
-  Archive, 
-  MessageSquare, 
-  Search, 
-  MoreVertical, 
-  Trash2, 
-  RefreshCw, 
-  FolderOpen 
-} from 'lucide-react';
+import { Archive, Search, MessageSquare, Calculator, Clock, ChevronRight, Trash2 } from 'lucide-react';
 
 const ArchivedChats = () => {
-  // Sample archived chats data
+  // Mock data for archived chats
   const archivedChats = [
-    { 
-      id: 1, 
-      title: 'AI Image Generation Techniques', 
-      lastMessage: 'Here are some advanced techniques for image generation using GANs...', 
-      timestamp: '3 weeks ago', 
-      messages: 24 
+    {
+      id: 1,
+      title: "Integrarea funcțiilor complexe",
+      preview: "Am nevoie de ajutor cu calculul integralei...",
+      date: "10 Mai 2025",
+      category: "Matematică",
+      messages: 12
     },
-    { 
-      id: 2, 
-      title: 'Project Planning Discussion', 
-      lastMessage: 'I recommend breaking down the development into these phases...', 
-      timestamp: '1 month ago', 
-      messages: 36 
+    {
+      id: 2,
+      title: "Algoritm de sortare în Python",
+      preview: "Cum pot implementa eficient un algoritm de sortare...",
+      date: "8 Mai 2025",
+      category: "Programare",
+      messages: 8
     },
-    { 
-      id: 3, 
-      title: 'Database Schema Design', 
-      lastMessage: 'The normalized schema should include these relationships...', 
-      timestamp: '2 months ago', 
-      messages: 15 
-    },
-    { 
-      id: 4, 
-      title: 'Machine Learning Model Comparison', 
-      lastMessage: 'When comparing these models, consider the following metrics...', 
-      timestamp: '2 months ago', 
-      messages: 28 
-    },
-    { 
-      id: 5, 
-      title: 'UI/UX Design Feedback', 
-      lastMessage: 'The interface could be improved by simplifying these components...', 
-      timestamp: '3 months ago', 
-      messages: 42 
-    },
+    {
+      id: 3,
+      title: "Teoria relativității",
+      preview: "Explică-mi conceptele cheie din teoria relativității...",
+      date: "3 Mai 2025",
+      category: "Fizică",
+      messages: 15
+    }
   ];
-  
+
   return (
     <ChatLayout>
-      <div className="container mx-auto px-4 py-6 max-w-5xl">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+      <div className="container p-4 md:p-6 max-w-4xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold font-space-grotesk">Archived Chats</h1>
-            <p className="text-muted-foreground">Access your previously archived conversations</p>
+            <h1 className="text-2xl md:text-3xl font-bold font-space-grotesk mb-2">Conversații Arhivate</h1>
+            <p className="text-muted-foreground">Accesați și gestionați conversațiile dvs. arhivate</p>
           </div>
           
-          <div className="relative w-full md:w-64">
-            <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search archives..."
-              className="pl-9 bg-background/70 shadow-inner"
-            />
+          <div className="relative w-full sm:w-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Caută conversații..." className="pl-9 w-full sm:w-[250px]" />
           </div>
         </div>
-
-        <div className="bg-card/80 backdrop-blur-sm rounded-xl border border-border/40 shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-border/40 flex justify-between items-center">
-            <div className="flex items-center">
-              <Archive className="h-5 w-5 mr-2 text-muted-foreground" />
-              <h2 className="font-semibold">Archived Conversations</h2>
-            </div>
-            
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="text-xs">
-                <FolderOpen className="h-3.5 w-3.5 mr-1.5" />
-                Restore All
-              </Button>
-              <Button variant="outline" size="sm" className="text-xs text-destructive border-destructive/30 hover:bg-destructive/10">
-                <Trash2 className="h-3.5 w-3.5 mr-1.5" />
-                Clear
-              </Button>
-            </div>
-          </div>
-          
-          {archivedChats.length > 0 ? (
-            <ScrollArea className="h-[calc(100vh-250px)]">
-              <div className="divide-y divide-border/40">
-                {archivedChats.map((chat) => (
-                  <div key={chat.id} className="p-4 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-3">
-                        <div className="mt-1 p-2 rounded-md bg-primary/10 text-primary">
-                          <MessageSquare className="h-5 w-5" />
-                        </div>
-                        
-                        <div className="flex-1">
-                          <h3 className="font-medium mb-1">{chat.title}</h3>
-                          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                            {chat.lastMessage}
-                          </p>
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <span>{chat.timestamp}</span>
-                            <span className="mx-2">•</span>
-                            <span>{chat.messages} messages</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex space-x-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <RefreshCw className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </div>
+        
+        {archivedChats.length > 0 ? (
+          <div className="space-y-4">
+            {archivedChats.map((chat) => (
+              <div 
+                key={chat.id}
+                className="border border-border/60 rounded-lg p-4 bg-background shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 h-10 w-10 rounded-full flex items-center justify-center">
+                      <Calculator className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">{chat.title}</h3>
+                      <p className="text-sm text-muted-foreground line-clamp-1">{chat.preview}</p>
                     </div>
                   </div>
-                ))}
+                  
+                  <Button variant="ghost" size="icon">
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  </Button>
+                </div>
+                
+                <div className="mt-3 pt-3 border-t flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5" />
+                      {chat.date}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MessageSquare className="h-3.5 w-3.5" />
+                      {chat.messages} mesaje
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" className="h-7 text-xs gap-1 hover:text-destructive">
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Șterge</span>
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
+                      <Archive className="h-3.5 w-3.5" />
+                      <span>Dezarhivează</span>
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </ScrollArea>
-          ) : (
-            <div className="py-20 flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-                <Archive className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-xl font-medium mb-2">No Archived Chats</h3>
-              <p className="text-muted-foreground max-w-sm mb-6">
-                You haven't archived any conversations yet. Archived chats will appear here.
-              </p>
-              <Button variant="outline">
-                Return to Chats
-              </Button>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-border/60 p-8 text-center">
+            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <Archive className="h-8 w-8 text-primary/70" />
             </div>
-          )}
+            <h3 className="text-lg font-medium mb-2">Nicio conversație arhivată</h3>
+            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
+              Conversațiile arhivate vor apărea aici. Poți arhiva convesațiile din ecranul principal.
+            </p>
+          </div>
+        )}
+        
+        <div className="mt-8 bg-muted/30 p-4 rounded-md border text-sm">
+          <h3 className="font-medium mb-2">Despre conversațiile arhivate</h3>
+          <p className="text-muted-foreground">
+            Conversațiile arhivate sunt stocate în siguranță și pot fi accesate oricând. 
+            Acestea nu apar în lista principală de conversații, dar conținutul lor rămâne intact.
+          </p>
         </div>
       </div>
     </ChatLayout>

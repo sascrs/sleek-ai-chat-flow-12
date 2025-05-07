@@ -1,261 +1,227 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ChatLayout } from '@/components/ChatLayout';
-import { Search, SlidersHorizontal } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-// Card type definition
-type ServerCard = {
-  id: string;
-  name: string;
-  description: string;
-  type: 'framework' | 'reference' | 'third-party' | 'community';
-  tags: string[];
-  rating: number;
-  extraTags?: string[];
-};
-
-// Server cards data
-const serverCards: ServerCard[] = [
-  {
-    id: 'fastmcp',
-    name: 'FastMCP',
-    description: 'A TypeScript framework for building MCP servers quickly and efficiently.',
-    type: 'framework',
-    tags: ['Framework', 'TypeScript', 'Development'],
-    rating: 4.9,
-    extraTags: ['+1 more']
-  },
-  {
-    id: 'everart',
-    name: 'EverArt',
-    description: 'AI image generation using various models',
-    type: 'reference',
-    tags: ['AI', 'Image Generation', 'Models'],
-    rating: 4.8
-  },
-  {
-    id: 'apify',
-    name: 'Apify',
-    description: 'Actors MCP Server: Use 3,000+ pre-built cloud tools to extract data from websites, e-commerce, social media...',
-    type: 'third-party',
-    tags: ['Data Extraction', 'Web Scraping', 'Automation'],
-    rating: 4.8,
-    extraTags: ['+1 more']
-  },
-  {
-    id: 'aws-kb',
-    name: 'AWS KB Retrieval',
-    description: 'Retrieval from AWS Knowledge Base using Bedrock Agent Runtime',
-    type: 'reference',
-    tags: ['AWS', 'AI', 'Knowledge Base'],
-    rating: 4.7,
-    extraTags: ['+1 more']
-  },
-  {
-    id: 'everything',
-    name: 'Everything',
-    description: 'Reference / test server with prompts, resources, and tools',
-    type: 'reference',
-    tags: ['Testing', 'Tools', 'Prompts'],
-    rating: 4.6,
-    extraTags: ['+1 more']
-  },
-  {
-    id: '21st-dev',
-    name: '21st.dev Magic',
-    description: 'Create crafted UI components inspired by the best 21st.dev design engineers.',
-    type: 'third-party',
-    tags: ['UI', 'Design', 'Components'],
-    rating: 4.6,
-    extraTags: ['+1 more']
-  },
-  {
-    id: 'brave-search',
-    name: 'Brave Search',
-    description: 'Web and local search using Brave\'s Search API',
-    type: 'reference',
-    tags: ['Search', 'Web', 'API'],
-    rating: 4.5
-  },
-  {
-    id: 'fetch',
-    name: 'Fetch',
-    description: 'Web content fetching and conversion for efficient LLM usage',
-    type: 'reference',
-    tags: ['Web', 'Content', 'Fetching'],
-    rating: 4.5,
-    extraTags: ['+1 more']
-  },
-  {
-    id: 'browser-use',
-    name: 'browser-use',
-    description: 'browser-use MCP server with dockerized playwright + chromium + vnc. supports stdio & resumable http.',
-    type: 'community',
-    tags: ['Browser', 'Automation', 'Docker'],
-    rating: 4.3,
-    extraTags: ['+1 more']
-  },
-  {
-    id: 'discord-bot',
-    name: 'Discord Bot',
-    description: 'A MCP server to connect to Discord guilds through a bot and read and write messages in channels',
-    type: 'community',
-    tags: ['Discord', 'Bot', 'Communication'],
-    rating: 4.2,
-    extraTags: ['+1 more']
-  }
-];
-
-// Tab categories
-const categories = [
-  { id: 'all', name: 'All Servers' },
-  { id: 'reference', name: 'Reference Servers' },
-  { id: 'third-party', name: 'Third-Party Servers' },
-  { id: 'community', name: 'Community Servers' },
-  { id: 'frameworks', name: 'Frameworks' },
-  { id: 'resources', name: 'Resources' }
-];
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LayoutDashboard, Calculator, Code, Network, GitBranch, Plus, Zap, Upload } from 'lucide-react';
+import { toast } from 'sonner';
 
 const MCP = () => {
-  const [activeCategory, setActiveCategory] = React.useState('all');
+  const [activeProject, setActiveProject] = useState('math-engine');
+  const [isLoading, setIsLoading] = useState(false);
   
-  const filteredCards = React.useMemo(() => {
-    if (activeCategory === 'all') return serverCards;
-    if (activeCategory === 'frameworks') return serverCards.filter(card => card.type === 'framework');
-    if (activeCategory === 'resources') return serverCards;
-    return serverCards.filter(card => card.type === activeCategory);
-  }, [activeCategory]);
-
-  const getCardBadgeClass = (type: string) => {
-    switch(type) {
-      case 'framework':
-        return "bg-gradient-to-r from-blue-400 to-indigo-500";
-      case 'reference':
-        return "bg-gradient-to-r from-blue-500 to-purple-400";
-      case 'third-party':
-        return "bg-gradient-to-r from-pink-400 to-purple-500";
-      case 'community':
-        return "bg-gradient-to-r from-blue-400 to-teal-400";
-      default:
-        return "bg-gradient-to-r from-gray-400 to-slate-500";
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    // Mock submission
+    setTimeout(() => {
+      toast.success('Proiect actualizat cu succes!');
+      setIsLoading(false);
+    }, 1500);
   };
-  
+
   return (
     <ChatLayout>
-      {/* Changed from min-h-screen to flex-1, and added class to prevent overlap with sidebar */}
-      <div className="flex-1 bg-[#111827] text-white p-6 md:p-8 overflow-auto w-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-6 md:mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">MCP Servers</h1>
-            <p className="text-gray-400 max-w-3xl">
-              Explore the Model Context Protocol (MCP) server ecosystem. Browse reference
-              implementations, third-party integrations, community servers, and frameworks for building AI-
-              powered applications.
-            </p>
-          </div>
-          
-          {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              <input
-                type="text"
-                placeholder="Search MCP servers..."
-                className="w-full bg-[#1c2536] border border-gray-700 rounded-md py-2 pl-10 pr-3 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
-            </div>
-            <div className="flex gap-3">
-              <button className="bg-[#1c2536] border border-gray-700 rounded-md px-4 py-2 flex items-center gap-2 text-sm">
-                <span>Highest Rated</span>
-                <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L6 6L11 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <button className="bg-[#1c2536] border border-gray-700 rounded-md px-4 py-2 flex items-center gap-2 text-sm">
-                <SlidersHorizontal size={16} />
-                <span>Filters</span>
-              </button>
-            </div>
-          </div>
-          
-          {/* Categories */}
-          <div className="flex overflow-x-auto pb-2 mb-6 hide-scrollbar">
-            <div className="flex flex-wrap gap-1">
-              {categories.map(category => (
-                <button
-                  key={category.id}
-                  className={`px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium ${
-                    activeCategory === category.id
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-[#1c2536] text-gray-300 hover:bg-gray-700'
-                  }`}
-                  onClick={() => setActiveCategory(category.id)}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          {/* Server Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCards.map(card => (
-              <div 
-                key={card.id} 
-                className="bg-gradient-to-b from-[#1a2235] to-[#131c2e] rounded-lg overflow-hidden border border-gray-800 relative"
-              >
-                {/* Type badge */}
-                <div className={`absolute right-0 top-0 rounded-bl-md rounded-tr-md text-xs font-medium px-2 py-1 text-white ${getCardBadgeClass(card.type)}`}>
-                  {card.type}
-                </div>
-                
-                {/* Card content */}
-                <div className="p-5">
-                  <h3 className="text-xl font-bold mb-3">{card.name}</h3>
-                  <p className="text-gray-400 text-sm mb-6 h-12 line-clamp-2">{card.description}</p>
-                  
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {card.tags.map((tag, index) => (
-                      <span 
-                        key={`${card.id}-tag-${index}`}
-                        className="bg-[#252e3f] text-gray-300 text-xs px-3 py-1 rounded-md"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {card.extraTags?.map((tag, index) => (
-                      <span 
-                        key={`${card.id}-extratag-${index}`}
-                        className="bg-[#252e3f] text-gray-400 text-xs px-3 py-1 rounded-md"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  {/* Rating and Details */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      <span className="ml-1 text-sm font-bold text-amber-400">{card.rating.toFixed(1)}</span>
-                    </div>
-                    <button className="text-indigo-400 hover:text-indigo-300 text-sm font-medium flex items-center gap-1">
-                      Details
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 5L16 12L9 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className="container p-4 md:p-6 max-w-5xl mx-auto">
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold font-space-grotesk mb-2">MCP (Model Control Panel)</h1>
+          <p className="text-muted-foreground">Control avansat al modulelor AI și proiectele personalizate</p>
         </div>
+        
+        <Tabs defaultValue="projects" className="space-y-6">
+          <TabsList className="mb-4">
+            <TabsTrigger value="projects" className="flex items-center gap-1.5">
+              <LayoutDashboard className="h-4 w-4" />
+              <span>Proiecte</span>
+            </TabsTrigger>
+            <TabsTrigger value="models" className="flex items-center gap-1.5">
+              <Network className="h-4 w-4" />
+              <span>Modele</span>
+            </TabsTrigger>
+            <TabsTrigger value="custom" className="flex items-center gap-1.5">
+              <GitBranch className="h-4 w-4" />
+              <span>Personalizare</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="projects" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className={`cursor-pointer ${activeProject === 'math-engine' ? 'border-primary/50' : ''}`}
+                onClick={() => setActiveProject('math-engine')}
+              >
+                <CardHeader className="pb-2">
+                  <div className="bg-primary/10 h-8 w-8 rounded-md flex items-center justify-center mb-2">
+                    <Calculator className="h-4 w-4 text-primary" />
+                  </div>
+                  <CardTitle className="text-base">Motor Matematic</CardTitle>
+                  <CardDescription>Model specializat pentru calcule și formule</CardDescription>
+                </CardHeader>
+                <CardFooter className="pt-2">
+                  <p className="text-xs text-muted-foreground">Actualizat: 9 Mai</p>
+                </CardFooter>
+              </Card>
+              
+              <Card className={`cursor-pointer ${activeProject === 'code-assist' ? 'border-primary/50' : ''}`}
+                onClick={() => setActiveProject('code-assist')}
+              >
+                <CardHeader className="pb-2">
+                  <div className="bg-primary/10 h-8 w-8 rounded-md flex items-center justify-center mb-2">
+                    <Code className="h-4 w-4 text-primary" />
+                  </div>
+                  <CardTitle className="text-base">Asistent Cod</CardTitle>
+                  <CardDescription>Model pentru debug și generare cod</CardDescription>
+                </CardHeader>
+                <CardFooter className="pt-2">
+                  <p className="text-xs text-muted-foreground">Actualizat: 7 Mai</p>
+                </CardFooter>
+              </Card>
+              
+              <Card className="cursor-pointer border-dashed border-border/70 flex flex-col items-center justify-center py-8">
+                <Plus className="h-8 w-8 text-muted-foreground mb-2" />
+                <p className="font-medium text-sm">Adaugă proiect nou</p>
+                <p className="text-xs text-muted-foreground mt-1">Creează un model personalizat</p>
+              </Card>
+            </div>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Configurație Proiect</CardTitle>
+                <CardDescription>Editează setările pentru proiectul selectat</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="project-name">Nume proiect</Label>
+                    <Input id="project-name" defaultValue="Motor Matematic" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="project-description">Descriere</Label>
+                    <Textarea id="project-description" defaultValue="Un model specializat în rezolvarea problemelor matematice și explicarea conceptelor" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="system-prompt">Prompt de sistem</Label>
+                    <Textarea 
+                      id="system-prompt" 
+                      className="min-h-[120px]" 
+                      defaultValue="Ești PyThaGO.AI, un asistent specializat în matematică. Oferă răspunsuri detaliate, pas cu pas, pentru probleme matematice. Include formule și explicații clare. Folosește notația matematică corectă."
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Acest prompt îi spune modelului cum să se comporte și ce tip de răspunsuri să ofere
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="temperature">Temperatură</Label>
+                      <Input id="temperature" type="number" min="0" max="1" step="0.1" defaultValue="0.7" />
+                      <p className="text-xs text-muted-foreground">
+                        Controlează creativitatea (0 = determinist, 1 = creativ)
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="max-tokens">Tokeni maximi</Label>
+                      <Input id="max-tokens" type="number" min="100" max="4000" step="100" defaultValue="1000" />
+                      <p className="text-xs text-muted-foreground">
+                        Lungimea maximă a răspunsului generat
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="active">Model activ</Label>
+                      <p className="text-xs text-muted-foreground">Activează sau dezactivează acest model</p>
+                    </div>
+                    <Switch id="active" defaultChecked />
+                  </div>
+                </form>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button variant="outline">Resetează</Button>
+                <Button onClick={handleSubmit} disabled={isLoading}>
+                  {isLoading ? (
+                    <>Salvare...</>
+                  ) : (
+                    <>
+                      <Zap className="h-4 w-4 mr-1.5" />
+                      Salvează modificările
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="models">
+            <Card>
+              <CardHeader>
+                <CardTitle>Modele AI Disponibile</CardTitle>
+                <CardDescription>Gestionează și fă fine-tuning modelelor AI disponibile</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Această secțiune permite controlul avansat al modelelor AI și customizarea parametrilor specifici.
+                    Cu un abonament Premium, poți face fine-tuning și personaliza modelele pentru performanță optimă.
+                  </p>
+                  
+                  <div className="relative border rounded-md p-6 flex flex-col items-center justify-center bg-muted/30">
+                    <Upload className="h-10 w-10 text-muted-foreground mb-3" />
+                    <h3 className="text-lg font-medium mb-1">Fine-tuning</h3>
+                    <p className="text-sm text-muted-foreground text-center mb-3 max-w-md">
+                      Încarcă date pentru a personaliza modelele pentru nevoile tale specifice
+                    </p>
+                    <Button variant="outline">Încarcă date de fine-tuning</Button>
+                    <div className="absolute top-3 right-3 bg-premium/20 text-premium px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                      <Zap className="h-3 w-3" />
+                      Premium
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="custom">
+            <Card>
+              <CardHeader>
+                <CardTitle>Setări Avansate</CardTitle>
+                <CardDescription>Personalizează funcționalitatea și parametrii de bază ai asistentului</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Această secțiune vă permite să ajustați comportamentul și funcționalitatea modelului în mod avansat.
+                    Aceste setări sunt disponibile doar pentru utilizatorii Premium.
+                  </p>
+                  
+                  <div className="bg-muted/30 p-4 rounded-md border text-center">
+                    <p className="text-sm">Pentru a accesa aceste funcții avansate, vă rugăm să faceți upgrade la un abonament Premium.</p>
+                    <Button className="mt-4 premium-button">
+                      <Zap className="h-4 w-4 mr-2" />
+                      Activează Premium
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </ChatLayout>
   );

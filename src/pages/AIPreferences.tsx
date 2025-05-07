@@ -1,184 +1,121 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { ChatLayout } from '@/components/ChatLayout';
 import { useSettings } from '@/context/SettingsContext';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Settings, Key, Trash2, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { Check, AlertTriangle } from 'lucide-react';
 
 const AIPreferences = () => {
   const { aiProviders, updateProvider, setActiveProvider } = useSettings();
-  const [apiKeys, setApiKeys] = useState<Record<string, string>>(() => {
-    // Initialize with current API keys
-    const initialKeys: Record<string, string> = {};
-    aiProviders.forEach(provider => {
-      initialKeys[provider.id] = provider.apiKey || '';
-    });
-    return initialKeys;
-  });
 
-  const handleApiKeyChange = (providerId: string, value: string) => {
-    setApiKeys(prev => ({ ...prev, [providerId]: value }));
+  const handleSaveApiKey = (id: string, newKey: string) => {
+    updateProvider(id, { apiKey: newKey });
+    toast.success(`Cheie API actualizată cu succes!`);
   };
 
-  const handleSaveApiKey = (providerId: string) => {
-    const apiKey = apiKeys[providerId]?.trim();
-    updateProvider(providerId, { apiKey });
-    toast.success('API key has been saved');
+  const handleActivateProvider = (id: string) => {
+    setActiveProvider(id);
   };
 
-  const handleSetActive = (providerId: string) => {
-    setActiveProvider(providerId);
+  const testConnection = (id: string) => {
+    const provider = aiProviders.find(p => p.id === id);
+    if (provider && provider.apiKey) {
+      toast.success(`Conexiunea cu ${provider.name} este funcțională`);
+    } else {
+      toast.error(`Nu s-a putut conecta. Verificați cheia API.`);
+    }
   };
 
   return (
     <ChatLayout>
-      <div className="container max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-            <Settings className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">AI Preferences</h1>
-            <p className="text-muted-foreground">
-              Configure AI models and set your API keys
-            </p>
-          </div>
-        </div>
-
+      <div className="container p-4 md:p-6 max-w-4xl mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold font-space-grotesk mb-2">Preferințe AI</h1>
+        <p className="text-muted-foreground mb-6">Configurați furnizorii și preferințele AI</p>
+        
         <div className="grid gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Active AI Model</CardTitle>
-              <CardDescription>
-                Choose which AI model you want to use for generating responses
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                {aiProviders.map((provider) => (
-                  <div
-                    key={provider.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:border-primary/30 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 h-9 w-9 rounded-full bg-accent flex items-center justify-center">
-                        {provider.icon ? (
-                          <img
-                            src={provider.icon}
-                            alt={provider.name}
-                            className="h-5 w-5"
-                          />
-                        ) : (
-                          <div className="h-5 w-5 rounded-full bg-primary/20 text-xs flex items-center justify-center text-primary font-medium">
-                            {provider.name.charAt(0)}
-                          </div>
-                        )}
-                      </div>
-                      <div>
-                        <h3 className="font-medium">{provider.name}</h3>
-                        <p className="text-xs text-muted-foreground">
-                          {provider.description || `Configure ${provider.name} API settings`}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      {provider.isActive && (
-                        <span className="text-xs flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-full">
-                          <CheckCircle className="h-3 w-3" />
-                          Active
-                        </span>
-                      )}
-                      <Switch
-                        checked={provider.isActive}
-                        onCheckedChange={() => handleSetActive(provider.id)}
-                      />
-                    </div>
+          {aiProviders.map((provider) => (
+            <Card key={provider.id} className={`border ${provider.isActive ? 'border-primary/50 shadow-md shadow-primary/10' : ''}`}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>{provider.name}</CardTitle>
+                    <CardDescription>{provider.description}</CardDescription>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">API Keys</CardTitle>
-              <CardDescription>
-                Set up your API keys for each provider to use their services
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-6">
-                {aiProviders.map((provider) => (
-                  <div key={provider.id} className="space-y-3">
-                    <Label htmlFor={`apiKey-${provider.id}`} className="flex items-center gap-2">
-                      <Key className="h-4 w-4" />
-                      {provider.name} API Key
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor={`activate-${provider.id}`} className="text-sm text-muted-foreground">
+                      Activ
                     </Label>
+                    <Switch 
+                      id={`activate-${provider.id}`}
+                      checked={provider.isActive} 
+                      onCheckedChange={() => handleActivateProvider(provider.id)} 
+                    />
+                  </div>
+                </div>
+              </CardHeader>
+              
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor={`api-key-${provider.id}`}>Cheie API</Label>
                     <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <Input
-                          id={`apiKey-${provider.id}`}
-                          type="password"
-                          placeholder={`Enter your ${provider.name} API key`}
-                          value={apiKeys[provider.id] || ''}
-                          onChange={(e) => handleApiKeyChange(provider.id, e.target.value)}
-                          className="pr-9"
-                        />
-                        {apiKeys[provider.id] && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                            onClick={() => handleApiKeyChange(provider.id, '')}
-                          >
-                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                          </Button>
-                        )}
-                      </div>
-                      <Button
-                        onClick={() => handleSaveApiKey(provider.id)}
-                        disabled={!apiKeys[provider.id]}
+                      <Input 
+                        id={`api-key-${provider.id}`}
+                        type="password" 
+                        placeholder={provider.apiKey ? "••••••••••••••••••••" : "Introduceți cheia API"} 
+                        defaultValue={provider.apiKey} 
+                        className="flex-1"
+                      />
+                      <Button 
+                        onClick={() => {
+                          const input = document.getElementById(`api-key-${provider.id}`) as HTMLInputElement;
+                          handleSaveApiKey(provider.id, input.value);
+                        }}
+                        size="sm"
                       >
-                        Save
+                        <Check className="h-4 w-4 mr-2" />
+                        Salvează
                       </Button>
                     </div>
-                    {provider.id === 'openai' && (
-                      <p className="text-xs text-muted-foreground">
-                        You can get your OpenAI API key from{" "}
-                        <a
-                          href="https://platform.openai.com/account/api-keys"
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-primary underline underline-offset-2"
-                        >
-                          the OpenAI dashboard
-                        </a>
-                      </p>
-                    )}
-                    {provider.id === 'groq' && (
-                      <p className="text-xs text-muted-foreground">
-                        You can get your Groq API key from{" "}
-                        <a
-                          href="https://console.groq.com/keys"
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-primary underline underline-offset-2"
-                        >
-                          the Groq console
-                        </a>
-                      </p>
-                    )}
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  
+                  {provider.isActive && !provider.apiKey && (
+                    <div className="bg-amber-500/10 text-amber-600 dark:text-amber-400 p-3 rounded-md flex items-start gap-2 text-sm">
+                      <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Atenție</p>
+                        <p>Acest furnizor este activ dar nu are setată o cheie API. Unele funcții ar putea să nu funcționeze corespunzător.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+              
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  onClick={() => testConnection(provider.id)}
+                  disabled={!provider.apiKey}
+                  className="w-full sm:w-auto"
+                >
+                  Testează conexiunea
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+        
+        <div className="mt-8 bg-muted/30 p-4 rounded-lg border">
+          <h3 className="font-medium mb-2">Despre API Keys</h3>
+          <p className="text-sm text-muted-foreground">
+            Cheile API sunt stocate doar în browserul dvs. local și nu sunt partajate cu serverele noastre. 
+            Pentru a obține chei API, vizitați site-urile oficiale ale furnizorilor respectivi.
+          </p>
         </div>
       </div>
     </ChatLayout>

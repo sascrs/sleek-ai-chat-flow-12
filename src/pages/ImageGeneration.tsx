@@ -2,189 +2,185 @@
 import React, { useState } from 'react';
 import { ChatLayout } from '@/components/ChatLayout';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
-import { Image, Download, Share2, RefreshCw, Wand2, PlusCircle } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
+import { Download, Image, Loader2, RefreshCw, Sparkles, Palette } from 'lucide-react';
+import { toast } from 'sonner';
 
 const ImageGeneration = () => {
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
-  const [imageSize, setImageSize] = useState(512);
-  const [imageStyle, setImageStyle] = useState('realistic');
-  
-  // Example generated images data
-  const generatedImages = [
-    { id: 1, url: 'https://picsum.photos/512', prompt: 'A beautiful sunset over mountains' },
-    { id: 2, url: 'https://picsum.photos/512', prompt: 'Futuristic cityscape with flying cars' },
-    { id: 3, url: 'https://picsum.photos/512', prompt: 'Serene forest with a waterfall' },
-    { id: 4, url: 'https://picsum.photos/512', prompt: 'Abstract digital art with vibrant colors' },
-  ];
-  
-  const styles = [
-    { id: 'realistic', name: 'Realistic', description: 'Photorealistic style' },
-    { id: 'anime', name: 'Anime', description: 'Japanese animation style' },
-    { id: 'digital-art', name: 'Digital Art', description: '3D rendered style' },
-    { id: 'oil-painting', name: 'Oil Painting', description: 'Classic art style' },
-    { id: 'watercolor', name: 'Watercolor', description: 'Soft watercolor style' },
-    { id: 'pixel-art', name: 'Pixel Art', description: 'Retro game style' },
-  ];
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   
   const handleGenerate = () => {
-    if (!prompt) {
-      toast({
-        title: "Please enter a prompt",
-        variant: "destructive",
-      });
+    if (!prompt.trim()) {
+      toast.error("Te rugăm să introduci un prompt");
       return;
     }
     
     setGenerating(true);
-    // Simulate image generation
+    
+    // Mock image generation
     setTimeout(() => {
+      // In a real app, these would be URLs returned from an AI image generation API
+      const mockImages = [
+        "https://images.unsplash.com/photo-1682686580003-22d3d65399a8?q=80&w=1740&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1693202800743-dee5e74e341a?q=80&w=1932&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1682685797898-6d7587784313?q=80&w=1740&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1693161305277-b6f7de626b30?q=80&w=1932&auto=format&fit=crop"
+      ];
+      
+      setGeneratedImages(mockImages);
       setGenerating(false);
-      toast({
-        title: "Image generated successfully",
-        description: "Your image is ready to view and download.",
-      });
-    }, 3000);
+      toast.success("Imagini generate cu succes!");
+    }, 2000);
   };
 
   return (
     <ChatLayout>
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold font-space-grotesk">AI Image Generation</h1>
+      <div className="container p-4 md:p-6 max-w-5xl mx-auto">
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold font-space-grotesk mb-2">Generare de Imagini</h1>
+          <p className="text-muted-foreground">Creați imagini bazate pe concepte matematice, algoritmi și ecuații</p>
         </div>
-
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1">
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl border border-border/40 shadow-sm p-4 mb-6">
-              <h2 className="text-lg font-semibold mb-3 font-space-grotesk">Create New Image</h2>
-              <Textarea 
-                placeholder="Describe the image you want to generate..." 
-                className="min-h-24 mb-4 bg-background/70 shadow-inner" 
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-              />
-              
-              <div className="mb-4">
-                <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium">Image Size: {imageSize}x{imageSize}</label>
+            <Card className="bg-card border-border/60">
+              <CardContent className="p-4 md:p-6 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="prompt">Prompt</Label>
+                  <Input 
+                    id="prompt"
+                    placeholder="Descrie imaginea dorită..." 
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    className="h-20 resize-none py-2"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Exemplu: "Vizualizare 3D a Teoremei lui Pitagora", "Model de rețea neuronală cu gradient colorat"
+                  </p>
                 </div>
-                <Slider 
-                  defaultValue={[512]} 
-                  max={1024} 
-                  min={256} 
-                  step={128}
-                  onValueChange={(value) => setImageSize(value[0])} 
-                  className="mb-6"
-                />
                 
-                <h3 className="text-sm font-medium mb-3">Style</h3>
-                <div className="grid grid-cols-2 gap-2 mb-6">
-                  {styles.map((style) => (
-                    <Button
-                      key={style.id}
-                      variant={imageStyle === style.id ? "secondary" : "outline"}
-                      className="justify-start h-auto py-2 px-3"
-                      onClick={() => setImageStyle(style.id)}
-                    >
-                      <div className="text-left">
-                        <div className="font-medium text-xs">{style.name}</div>
-                        <div className="text-[10px] text-muted-foreground">{style.description}</div>
-                      </div>
-                    </Button>
-                  ))}
+                <div className="space-y-6 pt-2">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label>Complexitate</Label>
+                      <span className="text-xs text-muted-foreground">Medie</span>
+                    </div>
+                    <Slider defaultValue={[50]} max={100} step={1} className="py-1.5" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="style">Stil</Label>
+                    <Select defaultValue="realistic">
+                      <SelectTrigger id="style">
+                        <SelectValue placeholder="Alege un stil" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="realistic">Realistic</SelectItem>
+                        <SelectItem value="abstract">Abstract</SelectItem>
+                        <SelectItem value="3d">3D Render</SelectItem>
+                        <SelectItem value="cartoon">Cartoon</SelectItem>
+                        <SelectItem value="sketch">Schițe</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="size">Format</Label>
+                    <Select defaultValue="square">
+                      <SelectTrigger id="size">
+                        <SelectValue placeholder="Alege un format" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="square">Pătrat (1:1)</SelectItem>
+                        <SelectItem value="portrait">Portret (2:3)</SelectItem>
+                        <SelectItem value="landscape">Landscape (3:2)</SelectItem>
+                        <SelectItem value="wide">Wide (16:9)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleGenerate} 
+                    disabled={generating} 
+                    className="w-full"
+                  >
+                    {generating ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Generare...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Generează Imagini
+                      </>
+                    )}
+                  </Button>
                 </div>
-              </div>
-              
-              <Button 
-                className="w-full rounded-xl bg-gradient-to-r from-primary/95 to-primary/85 hover:from-primary hover:to-primary/90 shadow-lg hover:shadow-primary/25 transition-all btn-3d"
-                onClick={handleGenerate}
-                disabled={generating}
-              >
-                {generating ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="h-4 w-4 mr-2" />
-                    Generate Image
-                  </>
-                )}
-              </Button>
+              </CardContent>
+            </Card>
+            
+            <div className="mt-4 bg-muted/30 p-4 rounded-md border text-sm">
+              <h3 className="font-medium mb-2 flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                Sfaturi pentru prompt-uri eficiente
+              </h3>
+              <ul className="list-disc pl-5 text-muted-foreground space-y-1">
+                <li>Descrieți detalii vizuale specifice</li>
+                <li>Menționați stilul artistic dorit</li>
+                <li>Includeți elemente matematice relevante</li>
+                <li>Specificați perspectiva sau unghiul de vedere</li>
+              </ul>
             </div>
           </div>
           
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="gallery" className="w-full">
-              <TabsList className="mb-4">
-                <TabsTrigger value="gallery" className="rounded-lg">Gallery</TabsTrigger>
-                <TabsTrigger value="history" className="rounded-lg">History</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="gallery" className="mt-0">
-                <div className="bg-card/80 backdrop-blur-sm rounded-xl border border-border/40 shadow-sm overflow-hidden">
-                  <div className="p-4 border-b border-border/40 flex justify-between items-center">
-                    <h2 className="font-semibold">Generated Images</h2>
-                    <Button variant="ghost" size="sm" className="text-xs">
-                      <PlusCircle className="h-3.5 w-3.5 mr-1.5" />
-                      New Folder
-                    </Button>
-                  </div>
-                  
-                  <ScrollArea className="h-[600px]">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-                      {generatedImages.map((img) => (
-                        <div key={img.id} className="group relative rounded-lg overflow-hidden border border-border/40 shadow-sm hover:shadow-md transition-all">
-                          <img 
-                            src={img.url} 
-                            alt={img.prompt} 
-                            className="w-full aspect-square object-cover" 
-                          />
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                            <p className="text-sm text-white line-clamp-2">{img.prompt}</p>
-                          </div>
-                          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                            <Button size="icon" variant="secondary" className="h-8 w-8 rounded-lg bg-background/80 backdrop-blur-sm">
-                              <Download className="h-4 w-4" />
-                            </Button>
-                            <Button size="icon" variant="secondary" className="h-8 w-8 rounded-lg bg-background/80 backdrop-blur-sm">
-                              <Share2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
+          <div className="lg:col-span-2 space-y-4">
+            {generatedImages.length ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {generatedImages.map((img, i) => (
+                  <div key={i} className="group relative aspect-square rounded-lg overflow-hidden border border-border/60 bg-black/5">
+                    <img 
+                      src={img} 
+                      alt={`Generated image ${i+1}`} 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+                      <Button size="sm" variant="secondary" className="shadow-md">
+                        <Download className="h-4 w-4 mr-2" />
+                        Descarcă
+                      </Button>
                     </div>
-                  </ScrollArea>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="history" className="mt-0">
-                <div className="bg-card/80 backdrop-blur-sm rounded-xl border border-border/40 shadow-sm p-4">
-                  <h3 className="text-lg font-medium mb-4">Your Generation History</h3>
-                  <div className="space-y-4">
-                    {[...Array(5)].map((_, i) => (
-                      <div key={i} className="flex items-center gap-4 p-3 rounded-lg border border-border/40 bg-background/50">
-                        <div className="h-16 w-16 rounded bg-muted flex items-center justify-center">
-                          <Image className="h-6 w-6 text-muted-foreground" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">Generated Image #{i + 1}</p>
-                          <p className="text-xs text-muted-foreground">Created {i + 1} day{i > 0 ? 's' : ''} ago</p>
-                        </div>
-                        <Button variant="outline" size="sm">View</Button>
-                      </div>
-                    ))}
                   </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full min-h-[400px] bg-white/5 backdrop-blur-md rounded-xl border border-border/60 p-8 text-center">
+                <Image className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
+                <h3 className="text-lg font-medium mb-2">Nicio imagine generată</h3>
+                <p className="text-muted-foreground text-sm mb-6 max-w-md">
+                  Adăugați un prompt și setările dorite, apoi apăsați butonul Generează pentru a crea imagini.
+                </p>
+              </div>
+            )}
+            
+            {generatedImages.length > 0 && (
+              <div className="flex justify-center space-x-4">
+                <Button variant="outline" onClick={() => setGeneratedImages([])}>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Resetează
+                </Button>
+                <Button variant="default">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Îmbunătățește imaginile
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
