@@ -1,173 +1,188 @@
 
 import React, { useState } from 'react';
-import { Settings, AlertTriangle, CheckCircle, Plus, Key, Trash2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { useSettings, AIProvider } from '@/context/SettingsContext';
-import { toast } from 'sonner';
-import { v4 as uuidv4 } from 'uuid';
 import { ChatLayout } from '@/components/ChatLayout';
+import { useSettings } from '@/context/SettingsContext';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Settings, Key, Trash2, CheckCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
-export default function AIPreferences() {
-  const { aiProviders, updateProvider, setActiveProvider, addProvider, removeProvider } = useSettings();
-  const [newProviderName, setNewProviderName] = useState('');
-  const [showNewProviderForm, setShowNewProviderForm] = useState(false);
+const AIPreferences = () => {
+  const { aiProviders, updateProvider, setActiveProvider } = useSettings();
+  const [apiKeys, setApiKeys] = useState<Record<string, string>>(() => {
+    // Initialize with current API keys
+    const initialKeys: Record<string, string> = {};
+    aiProviders.forEach(provider => {
+      initialKeys[provider.id] = provider.apiKey || '';
+    });
+    return initialKeys;
+  });
 
-  const handleUpdateApiKey = (id: string, apiKey: string) => {
-    updateProvider(id, { apiKey });
+  const handleApiKeyChange = (providerId: string, value: string) => {
+    setApiKeys(prev => ({ ...prev, [providerId]: value }));
   };
 
-  const handleToggleActive = (id: string) => {
-    setActiveProvider(id);
+  const handleSaveApiKey = (providerId: string) => {
+    const apiKey = apiKeys[providerId]?.trim();
+    updateProvider(providerId, { apiKey });
+    toast.success('API key has been saved');
   };
 
-  const handleAddProvider = () => {
-    if (newProviderName.trim() === '') {
-      toast.error('Please enter a name for the provider');
-      return;
-    }
-
-    const newProvider: AIProvider = {
-      id: uuidv4(),
-      name: newProviderName,
-      apiKey: '',
-      isActive: false,
-      description: 'Custom AI provider'
-    };
-
-    addProvider(newProvider);
-    setNewProviderName('');
-    setShowNewProviderForm(false);
+  const handleSetActive = (providerId: string) => {
+    setActiveProvider(providerId);
   };
 
   return (
     <ChatLayout>
-      <div className="container max-w-4xl py-8 space-y-6">
-        <div className="flex items-center gap-2 mb-8">
-          <Settings className="h-6 w-6 text-primary" />
-          <h1 className="text-3xl font-bold">AI Preferences</h1>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Model Providers</h2>
-          <p className="text-muted-foreground">
-            Configure API keys for various AI model providers to use with PyThaGO.AI
-          </p>
+      <div className="container max-w-4xl mx-auto px-4 py-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <Settings className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">AI Preferences</h1>
+            <p className="text-muted-foreground">
+              Configure AI models and set your API keys
+            </p>
+          </div>
         </div>
 
         <div className="grid gap-6">
-          {aiProviders.map((provider) => (
-            <Card key={provider.id} className="overflow-hidden backdrop-blur-sm bg-white/5 border border-border/50">
-              <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex gap-2 items-center">
-                    {provider.name}
-                    {provider.isActive && (
-                      <span className="inline-flex items-center text-xs font-medium ml-1.5 py-1 px-2 rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Active
-                      </span>
-                    )}
-                  </CardTitle>
-                  <Switch 
-                    checked={provider.isActive} 
-                    onCheckedChange={() => handleToggleActive(provider.id)} 
-                    className="data-[state=checked]:bg-primary"
-                  />
-                </div>
-                <CardDescription>{provider.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-2">
-                <div className="space-y-2">
-                  <Label htmlFor={`${provider.id}-api-key`} className="flex items-center gap-1.5">
-                    <Key className="h-3.5 w-3.5" /> API Key
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id={`${provider.id}-api-key`}
-                      type="password"
-                      value={provider.apiKey}
-                      onChange={(e) => handleUpdateApiKey(provider.id, e.target.value)}
-                      className="font-mono"
-                      placeholder={`Enter ${provider.name} API key`}
-                    />
-                    <Button 
-                      variant="outline" 
-                      size="icon"
-                      onClick={() => removeProvider(provider.id)}
-                      className="text-muted-foreground hover:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Active AI Model</CardTitle>
+              <CardDescription>
+                Choose which AI model you want to use for generating responses
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {aiProviders.map((provider) => (
+                  <div
+                    key={provider.id}
+                    className="flex items-center justify-between p-3 border rounded-lg hover:border-primary/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 h-9 w-9 rounded-full bg-accent flex items-center justify-center">
+                        {provider.icon ? (
+                          <img
+                            src={provider.icon}
+                            alt={provider.name}
+                            className="h-5 w-5"
+                          />
+                        ) : (
+                          <div className="h-5 w-5 rounded-full bg-primary/20 text-xs flex items-center justify-center text-primary font-medium">
+                            {provider.name.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{provider.name}</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {provider.description || `Configure ${provider.name} API settings`}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {provider.isActive && (
+                        <span className="text-xs flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-full">
+                          <CheckCircle className="h-3 w-3" />
+                          Active
+                        </span>
+                      )}
+                      <Switch
+                        checked={provider.isActive}
+                        onCheckedChange={() => handleSetActive(provider.id)}
+                      />
+                    </div>
                   </div>
-                  {provider.apiKey === '' && (
-                    <p className="text-xs flex items-center gap-1 text-amber-500 mt-1.5">
-                      <AlertTriangle className="h-3 w-3" />
-                      No API key set
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-          {showNewProviderForm ? (
-            <Card className="overflow-hidden bg-white/5 border border-dashed border-primary/30">
-              <CardHeader>
-                <CardTitle>Add Custom Provider</CardTitle>
-                <CardDescription>
-                  Add a custom AI model provider
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="new-provider-name">Provider Name</Label>
-                  <Input
-                    id="new-provider-name"
-                    value={newProviderName}
-                    onChange={(e) => setNewProviderName(e.target.value)}
-                    placeholder="Enter provider name"
-                  />
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowNewProviderForm(false)}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleAddProvider}>
-                  Add Provider
-                </Button>
-              </CardFooter>
-            </Card>
-          ) : (
-            <Button 
-              variant="outline" 
-              className="border-dashed border-primary/40 hover:border-primary flex gap-1"
-              onClick={() => setShowNewProviderForm(true)}
-            >
-              <Plus className="h-4 w-4" /> Add Custom Provider
-            </Button>
-          )}
-        </div>
-
-        <div className="mt-10 p-4 rounded-lg border border-amber-200/30 bg-amber-50/10 text-amber-800 dark:text-amber-300">
-          <div className="flex gap-2 items-start">
-            <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-medium mb-1">Security Note</h3>
-              <p className="text-sm">
-                API keys are stored locally in your browser. Never share your API keys or private information.
-              </p>
-            </div>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">API Keys</CardTitle>
+              <CardDescription>
+                Set up your API keys for each provider to use their services
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-6">
+                {aiProviders.map((provider) => (
+                  <div key={provider.id} className="space-y-3">
+                    <Label htmlFor={`apiKey-${provider.id}`} className="flex items-center gap-2">
+                      <Key className="h-4 w-4" />
+                      {provider.name} API Key
+                    </Label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Input
+                          id={`apiKey-${provider.id}`}
+                          type="password"
+                          placeholder={`Enter your ${provider.name} API key`}
+                          value={apiKeys[provider.id] || ''}
+                          onChange={(e) => handleApiKeyChange(provider.id, e.target.value)}
+                          className="pr-9"
+                        />
+                        {apiKeys[provider.id] && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                            onClick={() => handleApiKeyChange(provider.id, '')}
+                          >
+                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                          </Button>
+                        )}
+                      </div>
+                      <Button
+                        onClick={() => handleSaveApiKey(provider.id)}
+                        disabled={!apiKeys[provider.id]}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                    {provider.id === 'openai' && (
+                      <p className="text-xs text-muted-foreground">
+                        You can get your OpenAI API key from{" "}
+                        <a
+                          href="https://platform.openai.com/account/api-keys"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary underline underline-offset-2"
+                        >
+                          the OpenAI dashboard
+                        </a>
+                      </p>
+                    )}
+                    {provider.id === 'groq' && (
+                      <p className="text-xs text-muted-foreground">
+                        You can get your Groq API key from{" "}
+                        <a
+                          href="https://console.groq.com/keys"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary underline underline-offset-2"
+                        >
+                          the Groq console
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </ChatLayout>
   );
-}
+};
+
+export default AIPreferences;
