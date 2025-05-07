@@ -155,7 +155,6 @@ export function ChatWindow() {
       <div 
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 scrollbar-custom"
-        style={{ width: '125%' }}
       >
         <div className="chat-container">
           {!currentConversation?.messages.length ? (
