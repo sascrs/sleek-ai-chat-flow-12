@@ -126,30 +126,28 @@ const MCP = () => {
     if (activeCategory === 'resources') return serverCards;
     return serverCards.filter(card => card.type === activeCategory);
   }, [activeCategory]);
-  
-  const getCardClassName = (type: string) => {
-    const baseClasses = "absolute right-0 top-0 rounded-bl-md rounded-tr-md text-xs font-medium px-2 py-1 text-white";
-    
+
+  const getCardBadgeClass = (type: string) => {
     switch(type) {
       case 'framework':
-        return cn(baseClasses, "bg-gradient-to-r from-indigo-500 to-purple-500");
+        return "bg-gradient-to-r from-blue-400 to-indigo-500";
       case 'reference':
-        return cn(baseClasses, "bg-gradient-to-r from-blue-500 to-indigo-500");
+        return "bg-gradient-to-r from-blue-500 to-purple-400";
       case 'third-party':
-        return cn(baseClasses, "bg-gradient-to-r from-rose-500 to-purple-500");
+        return "bg-gradient-to-r from-pink-400 to-purple-500";
       case 'community':
-        return cn(baseClasses, "bg-gradient-to-r from-blue-500 to-teal-400");
+        return "bg-gradient-to-r from-blue-400 to-teal-400";
       default:
-        return cn(baseClasses, "bg-gradient-to-r from-gray-500 to-slate-700");
+        return "bg-gradient-to-r from-gray-400 to-slate-500";
     }
   };
   
   return (
     <ChatLayout>
-      <div className="min-h-screen bg-[#111827] text-white p-8 overflow-auto">
+      <div className="min-h-screen bg-[#111827] text-white p-6 md:p-8 overflow-auto">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">MCP Servers</h1>
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">MCP Servers</h1>
             <p className="text-gray-400 max-w-3xl">
               Explore the Model Context Protocol (MCP) server ecosystem. Browse reference
               implementations, third-party integrations, community servers, and frameworks for building AI-
@@ -182,14 +180,14 @@ const MCP = () => {
           </div>
           
           {/* Categories */}
-          <div className="flex overflow-x-auto pb-2 mb-8 hide-scrollbar">
+          <div className="flex overflow-x-auto pb-2 mb-6 hide-scrollbar">
             <div className="flex gap-1">
               {categories.map(category => (
                 <button
                   key={category.id}
                   className={`px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium ${
                     activeCategory === category.id
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-purple-600 text-white'
                       : 'bg-[#1c2536] text-gray-300 hover:bg-gray-700'
                   }`}
                   onClick={() => setActiveCategory(category.id)}
@@ -208,7 +206,7 @@ const MCP = () => {
                 className="bg-gradient-to-b from-[#1a2235] to-[#131c2e] rounded-lg overflow-hidden border border-gray-800 relative"
               >
                 {/* Type badge */}
-                <div className={getCardClassName(card.type)}>
+                <div className={`absolute right-0 top-0 rounded-bl-md rounded-tr-md text-xs font-medium px-2 py-1 text-white ${getCardBadgeClass(card.type)}`}>
                   {card.type}
                 </div>
                 
@@ -247,7 +245,7 @@ const MCP = () => {
                     </div>
                     <button className="text-indigo-400 hover:text-indigo-300 text-sm font-medium flex items-center gap-1">
                       Details
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={card.id === 'fastmcp' || card.id === 'browser-use' || card.id === 'discord-bot' ? 'rotate-180' : ''}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 5L16 12L9 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </button>
