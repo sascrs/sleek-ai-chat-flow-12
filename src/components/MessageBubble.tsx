@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Message } from '@/types';
-import { Copy, Check, Calculator, MoreHorizontal, Code, ArrowUpRight, Lightbulb, BookOpen } from 'lucide-react';
+import { Copy, Check, Calculator, MoreHorizontal, Code, ArrowUpRight, Lightbulb, BookOpen, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
