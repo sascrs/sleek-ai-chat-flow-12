@@ -25,7 +25,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   const modelNameMap: Record<string, string> = {
     'llama': 'Llama 70 B',
     'openai': 'GPT-4 Turbo',
-    'groq': 'Groq LLM',
+    'groq': 'Llama 4',
     'deepseek': 'DeepSeek Coder'
   };
 
