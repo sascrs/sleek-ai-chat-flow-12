@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { ChatLayout } from '@/components/ChatLayout';
-import { Search, Filter, Star } from 'lucide-react';
+import { Search, Filter, Star, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Card,
@@ -16,6 +16,14 @@ import {
 } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 type ServerCardProps = {
   title: string;
@@ -44,22 +52,22 @@ const ServerCard: React.FC<ServerCardProps> = ({
   };
 
   return (
-    <Card className="overflow-hidden bg-[#171B26] border-[#282D3A]">
+    <Card className="overflow-hidden bg-[#171B26] border-[#282D3A] hover:shadow-lg transition-shadow duration-300">
       <div className="relative h-16">
-        <div className={`absolute top-0 right-0 w-40 h-full ${getBadgeColor()} rounded-bl-full`}></div>
+        <div className={`absolute top-0 right-0 w-40 h-full ${getBadgeColor()} rounded-bl-full opacity-90`}></div>
         <div className="absolute top-3 right-5 text-white text-xs font-medium">{type}</div>
         <h3 className="text-xl font-semibold p-4 text-white">{title}</h3>
       </div>
       <CardContent className="p-4">
-        <p className="text-sm text-gray-300 mb-4">{description}</p>
+        <p className="text-sm text-gray-300 mb-4 line-clamp-2">{description}</p>
         
         <div className="flex flex-wrap gap-2 mb-4">
-          {tags.map((tag, i) => (
+          {tags.slice(0, 2).map((tag, i) => (
             <Badge key={i} variant="outline" className="bg-[#1F2537] text-white border-[#2A3148]">
               {tag}
             </Badge>
           ))}
-          {tags.length > 0 && <span className="text-xs text-gray-400 self-center">+1 more</span>}
+          {tags.length > 2 && <span className="text-xs text-gray-400 self-center">+{tags.length - 2} more</span>}
         </div>
         
         <div className="flex items-center justify-between">
@@ -67,7 +75,9 @@ const ServerCard: React.FC<ServerCardProps> = ({
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
             <span className="text-white font-medium">{rating.toFixed(1)}</span>
           </div>
-          <Button variant="link" className="text-purple-400 p-0 h-auto">Details</Button>
+          <Button variant="link" className="text-purple-400 p-0 h-auto hover:text-purple-300 transition-colors">
+            Details
+          </Button>
         </div>
       </CardContent>
     </Card>
@@ -76,6 +86,7 @@ const ServerCard: React.FC<ServerCardProps> = ({
 
 const MCP = () => {
   const [activeTab, setActiveTab] = useState<string>("all");
+  const isMobile = useIsMobile();
   
   const servers = [
     {
@@ -166,11 +177,10 @@ const MCP = () => {
       <div className="min-h-screen bg-[#111827] text-white">
         <div className="container mx-auto max-w-7xl p-4 md:p-6 space-y-6">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold">MCP Servers</h1>
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">MCP Servers</h1>
             <p className="text-gray-400 max-w-3xl">
               Explore the Model Context Protocol (MCP) server ecosystem. Browse reference
-              implementations, third-party integrations, community servers, and frameworks for building AI-
-              powered applications.
+              implementations, third-party integrations, community servers, and frameworks for building AI-powered applications.
             </p>
           </div>
           
@@ -180,27 +190,25 @@ const MCP = () => {
               <input
                 type="text"
                 placeholder="Search MCP servers..."
-                className="w-full bg-[#1F2537] border border-[#282D3A] rounded-lg py-2 pl-10 pr-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                className="w-full bg-[#1F2537] border border-[#282D3A] rounded-lg py-2 pl-10 pr-4 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-shadow"
               />
             </div>
             
-            <div className="flex gap-2">
-              <div className="relative w-44">
-                <select className="w-full appearance-none bg-[#1F2537] border border-[#282D3A] rounded-lg py-2 px-4 text-white pr-8 focus:outline-none">
-                  <option>Highest Rated</option>
-                  <option>Newest</option>
-                  <option>Most Used</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
+            <div className="flex gap-2 items-center">
+              <Select defaultValue="highest">
+                <SelectTrigger className="w-full sm:w-[180px] bg-[#1F2537] border-[#282D3A] text-white">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#171B26] border-[#282D3A] text-white">
+                  <SelectItem value="highest">Highest Rated</SelectItem>
+                  <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="most">Most Used</SelectItem>
+                </SelectContent>
+              </Select>
               
-              <Button variant="outline" className="bg-[#1F2537] border-[#282D3A] text-white">
+              <Button variant="outline" className="bg-[#1F2537] border-[#282D3A] text-white hover:bg-[#232A3B] transition-colors">
                 <Filter className="h-4 w-4 mr-2" />
-                Filters
+                <span className={cn(isMobile ? "hidden" : "inline")}>Filters</span>
               </Button>
             </div>
           </div>
@@ -208,88 +216,98 @@ const MCP = () => {
           <Separator className="border-[#282D3A]" />
           
           <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-transparent flex gap-1 overflow-x-auto pb-2">
-              <TabsTrigger 
-                value="all" 
-                className={cn(
-                  "rounded-md px-4 py-2",
-                  activeTab === "all" 
-                    ? "bg-purple-600 text-white" 
-                    : "bg-transparent text-white hover:bg-[#282D3A]"
-                )}
-              >
-                All Servers
-              </TabsTrigger>
-              <TabsTrigger 
-                value="reference" 
-                className={cn(
-                  "rounded-md px-4 py-2",
-                  activeTab === "reference" 
-                    ? "bg-purple-600 text-white" 
-                    : "bg-transparent text-white hover:bg-[#282D3A]"
-                )}
-              >
-                Reference Servers
-              </TabsTrigger>
-              <TabsTrigger 
-                value="third-party" 
-                className={cn(
-                  "rounded-md px-4 py-2",
-                  activeTab === "third-party" 
-                    ? "bg-purple-600 text-white" 
-                    : "bg-transparent text-white hover:bg-[#282D3A]"
-                )}
-              >
-                Third-Party Servers
-              </TabsTrigger>
-              <TabsTrigger 
-                value="community" 
-                className={cn(
-                  "rounded-md px-4 py-2",
-                  activeTab === "community" 
-                    ? "bg-purple-600 text-white" 
-                    : "bg-transparent text-white hover:bg-[#282D3A]"
-                )}
-              >
-                Community Servers
-              </TabsTrigger>
-              <TabsTrigger 
-                value="frameworks" 
-                className={cn(
-                  "rounded-md px-4 py-2",
-                  activeTab === "frameworks" 
-                    ? "bg-purple-600 text-white" 
-                    : "bg-transparent text-white hover:bg-[#282D3A]"
-                )}
-              >
-                Frameworks
-              </TabsTrigger>
-              <TabsTrigger 
-                value="resources" 
-                className={cn(
-                  "rounded-md px-4 py-2",
-                  activeTab === "resources" 
-                    ? "bg-purple-600 text-white" 
-                    : "bg-transparent text-white hover:bg-[#282D3A]"
-                )}
-              >
-                Resources
-              </TabsTrigger>
-            </TabsList>
+            <div className="scrollbar-custom overflow-x-auto">
+              <TabsList className="bg-transparent flex gap-1 pb-2">
+                <TabsTrigger 
+                  value="all" 
+                  className={cn(
+                    "rounded-md px-4 py-2 whitespace-nowrap",
+                    activeTab === "all" 
+                      ? "bg-purple-600 text-white" 
+                      : "bg-transparent text-white hover:bg-[#282D3A] transition-colors"
+                  )}
+                >
+                  All Servers
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="reference" 
+                  className={cn(
+                    "rounded-md px-4 py-2 whitespace-nowrap",
+                    activeTab === "reference" 
+                      ? "bg-purple-600 text-white" 
+                      : "bg-transparent text-white hover:bg-[#282D3A] transition-colors"
+                  )}
+                >
+                  Reference Servers
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="third-party" 
+                  className={cn(
+                    "rounded-md px-4 py-2 whitespace-nowrap",
+                    activeTab === "third-party" 
+                      ? "bg-purple-600 text-white" 
+                      : "bg-transparent text-white hover:bg-[#282D3A] transition-colors"
+                  )}
+                >
+                  Third-Party Servers
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="community" 
+                  className={cn(
+                    "rounded-md px-4 py-2 whitespace-nowrap",
+                    activeTab === "community" 
+                      ? "bg-purple-600 text-white" 
+                      : "bg-transparent text-white hover:bg-[#282D3A] transition-colors"
+                  )}
+                >
+                  Community Servers
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="frameworks" 
+                  className={cn(
+                    "rounded-md px-4 py-2 whitespace-nowrap",
+                    activeTab === "frameworks" 
+                      ? "bg-purple-600 text-white" 
+                      : "bg-transparent text-white hover:bg-[#282D3A] transition-colors"
+                  )}
+                >
+                  Frameworks
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="resources" 
+                  className={cn(
+                    "rounded-md px-4 py-2 whitespace-nowrap",
+                    activeTab === "resources" 
+                      ? "bg-purple-600 text-white" 
+                      : "bg-transparent text-white hover:bg-[#282D3A] transition-colors"
+                  )}
+                >
+                  Resources
+                </TabsTrigger>
+              </TabsList>
+            </div>
             
             <TabsContent value={activeTab} className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredServers.map((server, index) => (
-                  <ServerCard
-                    key={index}
-                    title={server.title}
-                    description={server.description}
-                    type={server.type}
-                    tags={server.tags}
-                    rating={server.rating}
-                  />
-                ))}
-              </div>
+              {filteredServers.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredServers.map((server, index) => (
+                    <ServerCard
+                      key={index}
+                      title={server.title}
+                      description={server.description}
+                      type={server.type}
+                      tags={server.tags}
+                      rating={server.rating}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <Info className="h-12 w-12 text-gray-400 mb-4" />
+                  <h3 className="text-xl font-medium text-gray-300 mb-2">No servers found</h3>
+                  <p className="text-gray-400">There are no servers available in this category yet.</p>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
